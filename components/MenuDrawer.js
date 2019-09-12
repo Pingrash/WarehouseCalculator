@@ -33,7 +33,7 @@ export default class MenuDrawer extends Component {
           <Text style={styles.topText}>Menu</Text>
         </View>
         <View style={styles.links}>
-          {this.navLink('Home', 'Home')}
+          {this.navLink('Home', 'Calculator')}
           {this.navLink('UoM', 'Unit Of Measurement')}
           {this.navLink('Cubic', 'Cubic Measurement')}
           {this.navLink(
