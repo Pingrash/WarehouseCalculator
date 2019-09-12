@@ -4,11 +4,15 @@ const GlobalContext = React.createContext();
 
 class GlobalProvider extends Component {
   state = {
-    modalVisible: false
+    modalVisible: false,
+    modalType: null
   };
 
-  setModalVisible = visible => {
-    this.setState({ modalVisible: visible });
+  setModalVisible = (visible, type) => {
+    this.setState({
+      modalVisible: visible,
+      modalType: type
+    });
   };
 
   render() {

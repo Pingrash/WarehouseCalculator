@@ -1,26 +1,23 @@
 import React, { Component } from 'react';
-import {
-  Text,
-  StyleSheet,
-  View,
-  Modal,
-  Picker
-} from 'react-native';
+import { StyleSheet, View, Modal } from 'react-native';
 import { GlobalContext } from '../context/GlobalContext';
 import SettingsButton from './SettingsButton';
 import CubicSettings from './CubicSettings';
+import PalletSettings from './PalletSettings';
 
 export default class SettingsModal extends Component {
   static contextType = GlobalContext;
 
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
   }
 
   render() {
-    const { modalVisible, setModalVisible } = this.context;
-    const { settingsType } = this.props;
-    console.log(settingsType);
+    const {
+      modalVisible,
+      setModalVisible,
+      modalType
+    } = this.context;
     return (
       <View>
         <Modal
@@ -28,15 +25,19 @@ export default class SettingsModal extends Component {
           transparent={false}
           visible={modalVisible}
           style={styles.modal}
-          onRequestClose={() => setModalVisible(false)}
+          onRequestClose={() =>
+            setModalVisible(false, null)
+          }
         >
           <View style={styles.buttonContainer}>
             <SettingsButton
               color='black'
-              background='white'
+              background='#f6f6f6'
             />
           </View>
-          {settingsType === 'cubic' ? (
+          {modalType === 'pallet' ? (
+            <PalletSettings />
+          ) : modalType === 'cubic' ? (
             <CubicSettings />
           ) : null}
         </Modal>
@@ -48,8 +49,7 @@ export default class SettingsModal extends Component {
 const styles = StyleSheet.create({
   modal: {
     height: 600,
-    width: 600,
-    backgroundColor: 'white'
+    width: 600
   },
   buttonContainer: {
     position: 'absolute',

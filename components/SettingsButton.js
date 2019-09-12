@@ -13,11 +13,13 @@ export default class MenuButton extends Component {
 
   render() {
     const { setModalVisible, modalVisible } = this.context;
-    const { color, background } = this.props;
+    const { color, background, type } = this.props;
     return (
       <View>
         <TouchableOpacity
-          onPress={() => setModalVisible(!modalVisible)}
+          onPress={() =>
+            setModalVisible(!modalVisible, type)
+          }
           style={{ backgroundColor: background }}
         >
           <Icon
