@@ -113,22 +113,21 @@ export default class Cubic extends Component {
   }
 
   render() {
-    const { modalVisible } = this.context;
+    const { cubicInputUnitType } = this.context;
     return (
       <View style={styles.topContainer}>
         <View style={styles.settingsContainer}>
           <SettingsButton
             color='#f1f1f1'
             background='black'
+            type='cubic'
           />
-          {modalVisible ? (
-            <SettingsModal settingsType='cubic' />
-          ) : null}
+          <SettingsModal />
         </View>
         <View style={styles.inputsContainer}>
           <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}>
-              Length:{'  '}
+              Length({cubicInputUnitType}):{'  '}
             </Text>
             <TextInput
               style={styles.input}
@@ -141,7 +140,7 @@ export default class Cubic extends Component {
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}>
-              Width:{'  '}
+              Width({cubicInputUnitType}):{'  '}
             </Text>
             <TextInput
               style={styles.input}
@@ -154,7 +153,7 @@ export default class Cubic extends Component {
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}>
-              Depth:{'  '}
+              Depth({cubicInputUnitType}):{'  '}
             </Text>
             <TextInput
               style={styles.input}
