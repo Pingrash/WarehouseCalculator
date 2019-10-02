@@ -16,8 +16,11 @@ export default class PalletSettings extends Component {
       palletLength,
       palletWidth,
       palletHeight,
+      palletWeight,
       measurementUnit,
+      weightUnit,
       maxShippingHeight,
+      maxShippingWeight,
       handleUnitChange
     } = this.context;
     return (
@@ -55,6 +58,17 @@ export default class PalletSettings extends Component {
             keyboardType={'numeric'}
           />
           <Text style={styles.labelText}>
+            Pallet Weight
+          </Text>
+          <TextInput
+            style={styles.input}
+            value={palletWeight}
+            onChangeText={text =>
+              handleUnitChange('palletWeight', text)
+            }
+            keyboardType={'numeric'}
+          />
+          <Text style={styles.labelText}>
             Measurement Unit
           </Text>
           <Picker
@@ -74,6 +88,22 @@ export default class PalletSettings extends Component {
             <Picker.Item label='inch' value='inch' />
             <Picker.Item label='m' value='m' />
           </Picker>
+          <Text style={styles.labelText}>Weight Unit</Text>
+          <Picker
+            selectedValue={weightUnit}
+            style={styles.picker}
+            onValueChange={(itemValue, itemIndex) =>
+              handleUnitChange(
+                'weightUnit',
+                itemValue,
+                weightUnit
+              )
+            }
+            mode='dialog'
+          >
+            <Picker.Item label='kg' value='kg' />
+            <Picker.Item label='lbs' value='lbs' />
+          </Picker>
           <Text style={styles.labelText}>
             Maximum Shipping Height
           </Text>
@@ -82,6 +112,17 @@ export default class PalletSettings extends Component {
             value={maxShippingHeight}
             onChangeText={text =>
               handleUnitChange('maxShippingHeight', text)
+            }
+            keyboardType={'numeric'}
+          />
+          <Text style={styles.labelText}>
+            Maximum Shipping Weight
+          </Text>
+          <TextInput
+            style={styles.input}
+            value={maxShippingWeight}
+            onChangeText={text =>
+              handleUnitChange('maxShippingWeight', text)
             }
             keyboardType={'numeric'}
           />
