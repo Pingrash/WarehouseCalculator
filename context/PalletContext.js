@@ -482,19 +482,15 @@ class PalletProvider extends Component {
   };
 
   // Sets the results from the calcPallet function to state.
-  setResult = (
-    totalLayers,
-    boxesPerLayer,
-    totalBoxes,
-    layoutType
-  ) => {
+  setResult = match => {
+    console.log(match);
     this.setState({
-      totalLayers: totalLayers.toString(),
-      boxesPerLayer: boxesPerLayer.toString(),
-      layoutType,
+      totalLayers: match[0].toString(),
+      boxesPerLayer: match[1].toString(),
+      layoutType: match[3],
       calculatePressed: true
     });
-    this.verifyWeight(totalBoxes);
+    this.verifyWeight(match[2]);
   };
 
   calcPallet = () => {
@@ -547,6 +543,7 @@ class PalletProvider extends Component {
 
     let stackTypes = 0;
     let types = [];
+    let temp = [];
 
     let layer1 = Math.floor(palletWidth / shortestSide);
     let layer2 = Math.floor(
@@ -576,14 +573,22 @@ class PalletProvider extends Component {
       console.log('Single Stack');
       boxesPerLayer = 1;
       totalBoxes = boxesPerLayer * totalLayers;
-      this.setResult(
+
+      temp = [
         totalLayers,
         boxesPerLayer,
         totalBoxes,
         'single'
-      );
-      // *FUTURE ADDITION* Set diagram of layout to be displayed.
+      ];
+      types.push(temp);
       stackTypes++;
+      // this.setResult(
+      //   totalLayers,
+      //   boxesPerLayer,
+      //   totalBoxes,
+      //   'single'
+      // );
+      // *FUTURE ADDITION* Set diagram of layout to be displayed.
     }
 
     // Square Stack
@@ -595,15 +600,22 @@ class PalletProvider extends Component {
         boxesPerLayer = bestFit * layer1;
 
       totalBoxes = boxesPerLayer * totalLayers;
-      this.setResult(
+
+      temp = [
         totalLayers,
         boxesPerLayer,
         totalBoxes,
         'square'
-      );
-      console.log('Square Stack');
+      ];
+      types.push(temp);
+      stackTypes++;
+      // this.setResult(
+      //   totalLayers,
+      //   boxesPerLayer,
+      //   totalBoxes,
+      //   'square'
+      // );
       // *FUTURE ADDITION* Set diagram of layout to be displayed.
-      return;
     }
 
     // Triple Stack
@@ -613,20 +625,25 @@ class PalletProvider extends Component {
       let totalInnerLayers = Math.floor(
         maxLayersHeight / longestSide
       );
-      //let innerHeight = cartonWidth * innerLayers;
       totalBoxes =
         outerLayersBoxes * totalLayers +
         innerLayers * totalInnerLayers;
 
-      this.setResult(
+      temp = [
         totalLayers,
         boxesPerLayer,
         totalBoxes,
         'triple'
-      );
-      console.log('Triple Stack');
+      ];
+      types.push(temp);
+      stackTypes++;
+      // this.setResult(
+      //   totalLayers,
+      //   boxesPerLayer,
+      //   totalBoxes,
+      //   'triple'
+      // );
       // *FUTURE ADDITION* Set diagram of layout to be displayed.
-      return;
     }
 
     // Castle Stack
@@ -637,27 +654,64 @@ class PalletProvider extends Component {
 
       totalBoxes = totalLayers * 4 + totalMiddleLayers * 4;
 
-      this.setResult(
+      temp = [
         totalLayers,
         boxesPerLayer,
         totalBoxes,
         'castle'
-      );
+      ];
+      types.push(temp);
+      stackTypes++;
+
+      // this.setResult(
+      //   totalLayers,
+      //   boxesPerLayer,
+      //   totalBoxes,
+      //   'castle'
+      // );
     }
 
     // Brick Stack
     if (layer1 == layer3 && layer2 == layer4) {
-      console.log('Brick Stack');
       boxesPerLayer = layer7 * 4;
       totalBoxes = boxesPerLayer * totalLayers;
-      this.setResult(
+
+      temp = [
         totalLayers,
         boxesPerLayer,
         totalBoxes,
         'brick'
-      );
+      ];
+      types.push(temp);
+      stackTypes++;
+      // this.setResult(
+      //   totalLayers,
+      //   boxesPerLayer,
+      //   totalBoxes,
+      //   'brick'
+      // );
       // *FUTURE ADDITION* Set diagram of layout to be displayed.
-      return;
+    }
+    console.log(types);
+    if (stackTypes > 1) {
+      // Find largest match
+      let bestMatch = null;
+      for (let index = 0; index < types.length; index++) {
+        const element = types[index];
+        if (bestMatch === null) {
+          bestMatch = element;
+        } else if (bestMatch !== null) {
+          if (element[2] > bestMatch[2]) {
+            bestMatch = element;
+          }
+        }
+      }
+      this.setResult(bestMatch);
+    } else if (stackTypes == 1) {
+      this.setResult(temp[0]);
+    } else if (stackTypes < 1) {
+      // No match
+      console.log('No match!');
     }
   };
 
