@@ -12,6 +12,7 @@ import SettingsButton from '../components/SettingsButton';
 import SettingsModal from '../components/SettingsModal';
 import { PalletContext } from '../context/PalletContext';
 import PalletSummary from '../components/PalletSummary';
+import Error from '../components/Error';
 
 export default class PalletEstimator extends Component {
   static contextType = PalletContext;
@@ -25,11 +26,9 @@ export default class PalletEstimator extends Component {
       handleUnitChange,
       calcPallet,
       calculatePressed,
-      totalLayers,
-      totalBoxes,
-      boxesPerLayer,
       measurementUnit,
-      weightUnit
+      weightUnit,
+      error
     } = this.context;
 
     return (
@@ -110,6 +109,7 @@ export default class PalletEstimator extends Component {
         </View>
         <View style={styles.bottomContainer}>
           {calculatePressed ? <PalletSummary /> : null}
+          {error ? <Error /> : null}
         </View>
       </ScrollView>
     );
