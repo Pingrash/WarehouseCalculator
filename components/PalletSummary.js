@@ -12,11 +12,23 @@ export default class PalletSummary extends Component {
       totalBoxes,
       totalPalletWeight,
       weightUnit,
-      layoutType
+      measurementUnit,
+      layoutType,
+      totalPalletHeight,
+      palletLength,
+      palletWidth
     } = this.context;
+    console.log(
+      palletLength,
+      palletWidth,
+      totalPalletHeight
+    );
     return (
-      <View>
-        <Text style={styles.text}>
+      <View style={styles.container}>
+        <Text style={styles.headerText}>
+          Layout Summary
+        </Text>
+        <Text style={[styles.text, styles.cap]}>
           Layout Type: {layoutType}
         </Text>
         <Text style={styles.text}>
@@ -25,12 +37,19 @@ export default class PalletSummary extends Component {
         <Text style={styles.text}>
           Boxes Per Layer: {boxesPerLayer}
         </Text>
-        <Text style={styles.text}>
+        <Text style={[styles.text, styles.endSection]}>
           Total Boxes: {totalBoxes}
+        </Text>
+        <Text style={styles.headerText}>
+          Pallet Summary
         </Text>
         <Text style={styles.text}>
           Total Pallet Weight: {totalPalletWeight}
           {weightUnit}
+        </Text>
+        <Text style={[styles.text, styles.endSection]}>
+          Pallet Dimensions:{' '}
+          {`${palletLength}x${palletWidth}x${totalPalletHeight}${measurementUnit}`}
         </Text>
       </View>
     );
@@ -40,7 +59,22 @@ export default class PalletSummary extends Component {
 const styles = StyleSheet.create({
   text: {
     fontSize: 25,
-    color: '#f1f1f1',
+    color: '#f1f1f1'
+  },
+  cap: {
     textTransform: 'capitalize'
+  },
+  headerText: {
+    fontSize: 30,
+    color: '#f1f1f1',
+    textTransform: 'capitalize',
+    textDecorationLine: 'underline',
+    textDecorationColor: '#f1f1f1'
+  },
+  endSection: {
+    paddingBottom: 12
+  },
+  container: {
+    paddingLeft: 20
   }
 });
