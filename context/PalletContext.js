@@ -1,7 +1,5 @@
 /* 
   Things to be added later:
-    - Verify height of pallet based on set max shipping height in settings.
-    - Add conversions of current displayed results.
     - Pallet layout diagram (do as a seperate component).
 */
 
@@ -38,6 +36,8 @@ class PalletProvider extends Component {
     precisionMaxShippingWeight: null,
     precisionTotalPalletWeight: null,
     totalPalletWeight: null,
+    totalPalletHeight: null,
+    heightAdjusted: false,
     error: false,
     errorType: null
   };
@@ -473,8 +473,57 @@ class PalletProvider extends Component {
     }
   };
 
+  calcTotalHeight = layers => {
+    console.log('Calculating total height');
+    return (
+      layers * parseInt(this.state.cartonHeight) +
+      parseInt(this.state.palletHeight)
+    );
+  };
+
+  verifyHeight = layers => {
+    console.log('Verifying height');
+    let totalHeight = this.calcTotalHeight(layers);
+    let layersChanged = false;
+    const maxHeight = parseInt(
+      this.state.maxShippingHeight
+    );
+
+    console.log(
+      layers,
+      totalHeight,
+      layersChanged,
+      maxHeight
+    );
+
+    if (totalHeight > maxHeight) {
+      console.log('Adjusting Height');
+      layersChanged = true;
+      while (totalHeight > maxHeight) {
+        layers--;
+        totalHeight = this.calcTotalHeight(layers);
+      }
+    }
+
+    layersChanged
+      ? this.setState({
+          totalPalletHeight: totalHeight.toString(),
+          heightAdjusted: true
+        })
+      : this.setState({
+          totalPalletHeight: totalHeight.toString()
+        });
+
+    if (layersChanged)
+      this.verifyWeight(
+        parseInt(this.state.totalBoxes),
+        parseInt(this.state.boxesPerLayer)
+      );
+  };
+
   // Verify total boxes is below weight limit for shipping and adjust accordingly.
-  verifyWeight = boxes => {
+  verifyWeight = (boxes, perLayer, layers) => {
+    console.log('Verifying weight');
     const maxShippingWeight = parseFloat(
       this.state.maxShippingWeight
     );
@@ -485,48 +534,49 @@ class PalletProvider extends Component {
       this.state.palletWeight
     );
     let totalBoxes = boxes;
+    let newLayers = layers;
 
     // Calculate current pallet weight based on the current box total.
     let weight = cartonWeight * totalBoxes + palletWeight;
 
     // If current weight is above the maximum then calculate a new box total based on the maximum weight divided by the carton weight.
     if (weight > maxShippingWeight) {
+      console.log('Adjusting weight');
       totalBoxes = Math.floor(
         (maxShippingWeight - palletWeight) / cartonWeight
       );
       weight = cartonWeight * totalBoxes + palletWeight;
+      newLayers = Math.ceil(totalBoxes / perLayer);
     }
 
     // Set the results to state.
     this.setState({
       totalBoxes: totalBoxes.toString(),
-      totalPalletWeight: weight.toString()
+      totalPalletWeight: weight.toString(),
+      totalLayers: newLayers.toString()
     });
+
+    if (this.state.heightAdjusted) {
+      this.setState({ heightAdjusted: false });
+    } else {
+      this.verifyHeight(newLayers);
+    }
   };
 
   // Sets the results from the calcPallet function to state.
   setResult = match => {
-    console.log(match);
+    console.log(match, match[0]);
     this.setState({
-      totalLayers: match[0].toString(),
       boxesPerLayer: match[1].toString(),
       layoutType: match[3],
       calculatePressed: true
     });
-    this.verifyWeight(match[2]);
+    this.verifyWeight(match[2], match[1], match[0]);
   };
 
   // Calculates pallet layout and numbers.
   calcPallet = () => {
-    const measurements = { ...this.state };
-
-    // Check for empty carton measurement fields. Returns if any are empty.
-    if (
-      (measurements.cartonHeight ||
-        measurements.cartonLength ||
-        measurements.cartonWidth) === null
-    )
-      return;
+    console.log('Calculating....');
 
     // Reset result values in state. Probably not necessary. CHECK LATER!
     this.setState({
@@ -536,6 +586,16 @@ class PalletProvider extends Component {
       error: false,
       errorType: null
     });
+
+    const measurements = { ...this.state };
+
+    // Check for empty carton measurement fields. Returns if any are empty.
+    if (
+      (measurements.cartonHeight ||
+        measurements.cartonLength ||
+        measurements.cartonWidth) === null
+    )
+      return;
 
     let cartonLength = parseFloat(
       measurements.cartonLength
@@ -587,8 +647,29 @@ class PalletProvider extends Component {
     let layer8 = Math.floor(
       (palletLength % shortestSide) / longestSide
     );
-    let layer9 = Math.floor(palletWidth % cartonHeight);
-    let layer10 = Math.floor(palletLength % shortestSide);
+    let layer9 = Math.floor(
+      (palletWidth % longestSide) / cartonHeight
+    );
+    let layer10 = Math.floor(
+      (palletLength % (shortestSide * 2)) / cartonHeight
+    );
+
+    console.log(
+      layer1,
+      layer2,
+      layer3,
+      layer4,
+      layer5,
+      layer6,
+      layer7,
+      layer8,
+      layer9,
+      layer10,
+      shortestSide,
+      longestSide,
+      cartonHeight,
+      totalLayers
+    );
 
     const checkLayer = () => {
       if ((layer1 && layer3 && layer5 && layer7) > 1)
@@ -630,10 +711,11 @@ class PalletProvider extends Component {
       checkLayer() === true
     ) {
       let bestFit = Math.max(layer3, layer7);
+      console.log('bestfit = ', bestFit);
       if (bestFit == layer3)
-        boxesPerLayer = bestFit * layer5;
-      else if (bestFit == layer7)
         boxesPerLayer = bestFit * layer1;
+      else if (bestFit == layer7)
+        boxesPerLayer = bestFit * layer5;
 
       totalBoxes = boxesPerLayer * totalLayers;
 
@@ -652,7 +734,7 @@ class PalletProvider extends Component {
     // Triple Stack
     if (layer9 >= 1 && layer7 > 1 && layer5 == 2) {
       let outerLayersBoxes = layer7 * layer5;
-      let innerLayers = layer9 * layer10;
+      let innerLayers = layer9 * layer7;
       let totalInnerLayers = Math.floor(
         maxLayersHeight / longestSide
       );
@@ -673,7 +755,7 @@ class PalletProvider extends Component {
     }
 
     // Castle Stack
-    if ((layer2 || layer4 || layer6 || layer8) == 1) {
+    if (layer7 >= 2 && (layer9 && layer10) == 1) {
       let totalMiddleLayers = Math.floor(
         maxLayersHeight / shortestSide
       );
@@ -693,10 +775,10 @@ class PalletProvider extends Component {
     }
 
     // Brick Stack
+    //if (layer1 == layer7 && layer2 == layer8) {
     if (
-      layer1 == layer3 &&
-      layer2 == layer4 &&
-      checkLayer() === true
+      (layer8 && layer2) === 1 &&
+      (layer7 && layer1) > 1
     ) {
       boxesPerLayer = layer7 * 4;
       totalBoxes = boxesPerLayer * totalLayers;
@@ -711,8 +793,8 @@ class PalletProvider extends Component {
       stackTypes++;
       // *FUTURE ADDITION* Set diagram of layout to be displayed.
     }
-    console.log('types = ' + stackTypes);
-    console.log('temp = ' + temp);
+    console.log('stackTypes = ' + stackTypes);
+    console.log('types = ' + types);
     if (stackTypes > 1) {
       // Find largest match
       let bestMatch = null;
@@ -728,7 +810,7 @@ class PalletProvider extends Component {
       }
       this.setResult(bestMatch);
     } else if (stackTypes == 1) {
-      this.setResult(temp[0]);
+      this.setResult(temp);
     } else if (stackTypes == 0) {
       // No match
       console.log('No match!');

@@ -89,7 +89,7 @@ export default class PalletEstimator extends Component {
             />
           </View>
           <Text style={styles.helperText}>
-            Pallet paramaters and shipping conditions can be
+            Pallet parameters and shipping conditions can be
             changed in the settings menu.
           </Text>
         </View>
@@ -100,7 +100,10 @@ export default class PalletEstimator extends Component {
             />
           </View>
           <TouchableOpacity
-            onPress={calcPallet}
+            onPress={() => {
+              console.log('press');
+              calcPallet();
+            }}
             style={styles.button}
             accessibilityLabel='Calculate'
           >
