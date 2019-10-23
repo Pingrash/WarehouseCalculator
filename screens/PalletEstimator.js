@@ -140,8 +140,7 @@ const styles = StyleSheet.create({
     paddingRight: 30
   },
   bottomContainer: {
-    flex: 1,
-    backgroundColor: 'blue'
+    flex: 1
   },
   menuButtonContainer: {
     paddingBottom: 26
@@ -167,7 +166,7 @@ const styles = StyleSheet.create({
     marginLeft: 40,
     width: 250,
     height: 60,
-    backgroundColor: 'blue',
+    backgroundColor: '#506680',
     alignItems: 'center',
     justifyContent: 'space-around',
     borderRadius: 20

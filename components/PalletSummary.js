@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import { PalletContext } from '../context/PalletContext';
+import LayoutPreview from './LayoutPreview';
 
 export default class PalletSummary extends Component {
   static contextType = PalletContext;
@@ -28,9 +29,6 @@ export default class PalletSummary extends Component {
         <Text style={styles.headerText}>
           Layout Summary
         </Text>
-        <Text style={[styles.text, styles.cap]}>
-          Layout Type: {layoutType}
-        </Text>
         <Text style={styles.text}>
           Total Layers: {totalLayers}
         </Text>
@@ -51,6 +49,10 @@ export default class PalletSummary extends Component {
           Pallet Dimensions:{' '}
           {`${palletLength}x${palletWidth}x${totalPalletHeight}${measurementUnit}`}
         </Text>
+        <Text style={[styles.text, styles.cap]}>
+          Layout Type: {layoutType}
+        </Text>
+        <LayoutPreview />
       </View>
     );
   }
@@ -75,6 +77,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12
   },
   container: {
-    paddingLeft: 20
+    paddingLeft: 20,
+    backgroundColor: '#353C51'
   }
 });
