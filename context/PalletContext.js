@@ -1,6 +1,7 @@
 /* 
   Things to be added later:
     - Pallet layout diagram (do as a seperate component).
+    - Add ability for calcPallet to use the carton's height as the long side.
 */
 
 import React, { Component } from 'react';
@@ -26,9 +27,12 @@ class PalletProvider extends Component {
     boxesPerLayer: null,
     layoutType: null,
     calculatePressed: false,
-    precisionLength: null,
-    precisionWidth: null,
-    precisionHeight: null,
+    precisionPalletLength: null,
+    precisionPalletWidth: null,
+    precisionPalletHeight: null,
+    precisionCartonLength: null,
+    precisionCartonWidth: null,
+    precisionCartonHeight: null,
     precisionMaxShippingHeight: null,
     usePrecisionMeasurements: false,
     precisionPalletWeight: null,
@@ -39,38 +43,51 @@ class PalletProvider extends Component {
     totalPalletHeight: null,
     heightAdjusted: false,
     error: false,
-    errorType: null
+    errorType: null,
+    sideLay: true
   };
 
   // Function that handles the conversion of measurements when the unit type is changed in settings.
-  convertSettingsMeasurements = (newUnit, prevUnit) => {
+  convertMeasurements = (newUnit, prevUnit) => {
     // Variables for inch calculations.
     // Storage of precision versions of any inch calculations is necessary as using rounded results only leads to incorrect conversions if the user changes unit type multiple times.
     let {
-      precisionLength,
-      precisionWidth,
-      precisionHeight,
+      precisionPalletLength,
+      precisionPalletWidth,
+      precisionPalletHeight,
+      precisionCartonLength,
+      precisionCartonWidth,
+      precisionCartonHeight,
       precisionMaxShippingHeight
     } = this.state;
 
-    let oldLength,
-      oldWidth,
-      oldHeight,
+    let oldPalletLength,
+      oldPalletWidth,
+      oldPalletHeight,
+      oldCartonLength,
+      oldCartonWidth,
+      oldCartonHeight,
       oldMaxShippingHeight;
 
     if (this.state.usePrecisionMeasurements) {
       // Set current precision measurements from state.
       // Done for instances of having to convert to/from inches.
-      oldLength = this.state.precisionLength;
-      oldWidth = this.state.precisionWidth;
-      oldHeight = this.state.precisionHeight;
+      oldPalletLength = this.state.precisionPalletLength;
+      oldPalletWidth = this.state.precisionPalletWidth;
+      oldPalletHeight = this.state.precisionPalletHeight;
+      oldCartonLength = this.state.precisionCartonLength;
+      oldCartonWidth = this.state.precisionCartonWidth;
+      oldCartonHeight = this.state.precisionCartonHeight;
       oldMaxShippingHeight = this.state
         .precisionMaxShippingHeight;
     } else {
       // Parse current measurements to integers
-      oldLength = parseFloat(this.state.palletLength);
-      oldWidth = parseFloat(this.state.palletWidth);
-      oldHeight = parseFloat(this.state.palletHeight);
+      oldPalletLength = parseFloat(this.state.palletLength);
+      oldPalletWidth = parseFloat(this.state.palletWidth);
+      oldPalletHeight = parseFloat(this.state.palletHeight);
+      oldCartonLength = parseFloat(this.state.cartonLength);
+      oldCartonWidth = parseFloat(this.state.cartonWidth);
+      oldCartonHeight = parseFloat(this.state.cartonHeight);
       oldMaxShippingHeight = parseFloat(
         this.state.maxShippingHeight
       );
@@ -82,9 +99,20 @@ class PalletProvider extends Component {
         // cm to mm
         case 'cm':
           this.setState({
-            palletLength: (oldLength * 100).toString(),
-            palletWidth: (oldWidth * 100).toString(),
-            palletHeight: (oldHeight * 100).toString(),
+            palletLength: (
+              oldPalletLength * 100
+            ).toString(),
+            palletWidth: (oldPalletWidth * 100).toString(),
+            palletHeight: (
+              oldPalletHeight * 100
+            ).toString(),
+            cartonLength: (
+              oldCartonLength * 100
+            ).toString(),
+            cartonWidth: (oldCartonWidth * 100).toString(),
+            cartonHeight: (
+              oldCartonHeight * 100
+            ).toString(),
             maxShippingHeight: (
               oldMaxShippingHeight * 100
             ).toString(),
@@ -94,27 +122,42 @@ class PalletProvider extends Component {
 
         // inches to mm
         case 'inch':
-          precisionLength = oldLength * 25.4;
-          precisionWidth = oldWidth * 25.4;
-          precisionHeight = oldHeight * 25.4;
+          precisionPalletLength = oldPalletLength * 25.4;
+          precisionPalletWidth = oldPalletWidth * 25.4;
+          precisionPalletHeight = oldPalletHeight * 25.4;
+          precisionCartonLength = oldCartonLength * 25.4;
+          precisionCartonWidth = oldCartonWidth * 25.4;
+          precisionCartonHeight = oldCartonHeight * 25.4;
           precisionMaxShippingHeight =
             oldMaxShippingHeight * 25.4;
           this.setState({
-            palletLength: precisionLength
+            palletLength: precisionPalletLength
               .toFixed(2)
               .toString(),
-            palletWidth: precisionWidth
+            palletWidth: precisionPalletWidth
               .toFixed(2)
               .toString(),
-            palletHeight: precisionHeight
+            palletHeight: precisionPalletHeight
+              .toFixed(2)
+              .toString(),
+            cartonLength: precisionCartonLength
+              .toFixed(2)
+              .toString(),
+            cartonWidth: precisionCartonWidth
+              .toFixed(2)
+              .toString(),
+            cartonHeight: precisionCartonHeight
               .toFixed(2)
               .toString(),
             maxShippingHeight: precisionMaxShippingHeight
               .toFixed(2)
               .toString(),
-            precisionLength,
-            precisionWidth,
-            precisionHeight,
+            precisionPalletLength,
+            precisionPalletWidth,
+            precisionPalletHeight,
+            precisionCartonLength,
+            precisionCartonWidth,
+            precisionCartonHeight,
             precisionMaxShippingHeight,
             usePrecisionMeasurements: true
           });
@@ -123,9 +166,20 @@ class PalletProvider extends Component {
         // metres to mm
         case 'm':
           this.setState({
-            palletLength: (oldLength * 1000).toString(),
-            palletWidth: (oldWidth * 1000).toString(),
-            palletHeight: (oldHeight * 1000).toString(),
+            palletLength: (
+              oldPalletLength * 1000
+            ).toString(),
+            palletWidth: (oldPalletWidth * 1000).toString(),
+            palletHeight: (
+              oldPalletHeight * 1000
+            ).toString(),
+            cartonLength: (
+              oldCartonLength * 1000
+            ).toString(),
+            cartonWidth: (oldCartonWidth * 1000).toString(),
+            cartonHeight: (
+              oldCartonHeight * 1000
+            ).toString(),
             maxShippingHeight: (
               oldMaxShippingHeight * 1000
             ).toString(),
@@ -141,9 +195,20 @@ class PalletProvider extends Component {
         // mm to cm
         case 'mm':
           this.setState({
-            palletLength: (oldLength / 100).toString(),
-            palletWidth: (oldWidth / 100).toString(),
-            palletHeight: (oldHeight / 100).toString(),
+            palletLength: (
+              oldPalletLength / 100
+            ).toString(),
+            palletWidth: (oldPalletWidth / 100).toString(),
+            palletHeight: (
+              oldPalletHeight / 100
+            ).toString(),
+            cartonLength: (
+              oldCartonLength / 100
+            ).toString(),
+            cartonWidth: (oldCartonWidth / 100).toString(),
+            cartonHeight: (
+              oldCartonHeight / 100
+            ).toString(),
             maxShippingHeight: (
               oldMaxShippingHeight / 100
             ).toString(),
@@ -153,27 +218,42 @@ class PalletProvider extends Component {
 
         // inches to cm
         case 'inch':
-          precisionLength = oldLength * 2.54;
-          precisionWidth = oldWidth * 2.54;
-          precisionHeight = oldHeight * 2.54;
+          precisionPalletLength = oldPalletLength * 2.54;
+          precisionPalletWidth = oldPalletWidth * 2.54;
+          precisionPalletHeight = oldPalletHeight * 2.54;
+          precisionCartonLength = oldCartonLength * 2.54;
+          precisionCartonWidth = oldCartonWidth * 2.54;
+          precisionCartonHeight = oldCartonHeight * 2.54;
           precisionMaxShippingHeight =
             oldMaxShippingHeight * 2.54;
           this.setState({
-            palletLength: precisionLength
+            palletLength: precisionPalletLength
               .toFixed(2)
               .toString(),
-            palletWidth: precisionWidth
+            palletWidth: precisionPalletWidth
               .toFixed(2)
               .toString(),
-            palletHeight: precisionHeight
+            palletHeight: precisionPalletHeight
+              .toFixed(2)
+              .toString(),
+            cartonLength: precisionCartonLength
+              .toFixed(2)
+              .toString(),
+            cartonWidth: precisionCartonWidth
+              .toFixed(2)
+              .toString(),
+            cartonHeight: precisionCartonHeight
               .toFixed(2)
               .toString(),
             maxShippingHeight: precisionMaxShippingHeight
               .toFixed(2)
               .toString(),
-            precisionLength,
-            precisionWidth,
-            precisionHeight,
+            precisionPalletLength,
+            precisionPalletWidth,
+            precisionPalletHeight,
+            precisionCartonLength,
+            precisionCartonWidth,
+            precisionCartonHeight,
             precisionMaxShippingHeight,
             usePrecisionMeasurements: true
           });
@@ -182,9 +262,20 @@ class PalletProvider extends Component {
         // metres to cm
         case 'm':
           this.setState({
-            palletLength: (oldLength * 100).toString(),
-            palletWidth: (oldWidth * 100).toString(),
-            palletHeight: (oldHeight * 100).toString(),
+            palletLength: (
+              oldPalletLength * 100
+            ).toString(),
+            palletWidth: (oldPalletWidth * 100).toString(),
+            palletHeight: (
+              oldPalletHeight * 100
+            ).toString(),
+            cartonLength: (
+              oldCartonLength * 100
+            ).toString(),
+            cartonWidth: (oldCartonWidth * 100).toString(),
+            cartonHeight: (
+              oldCartonHeight * 100
+            ).toString(),
             maxShippingHeight: (
               oldMaxShippingHeight * 100
             ).toString(),
@@ -199,27 +290,42 @@ class PalletProvider extends Component {
       switch (prevUnit) {
         // mm to inches
         case 'mm':
-          precisionLength = oldLength / 25.4;
-          precisionWidth = oldWidth / 25.4;
-          precisionHeight = oldHeight / 25.4;
+          precisionPalletLength = oldPalletLength / 25.4;
+          precisionPalletWidth = oldPalletWidth / 25.4;
+          precisionPalletHeight = oldPalletHeight / 25.4;
+          precisionCartonLength = oldCartonLength / 25.4;
+          precisionCartonWidth = oldCartonWidth / 25.4;
+          precisionCartonHeight = oldCartonHeight / 25.4;
           precisionMaxShippingHeight =
             oldMaxShippingHeight / 25.4;
           this.setState({
-            palletLength: precisionLength
+            palletLength: precisionPalletLength
               .toFixed(2)
               .toString(),
-            palletWidth: precisionWidth
+            palletWidth: precisionPalletWidth
               .toFixed(2)
               .toString(),
-            palletHeight: precisionHeight
+            palletHeight: precisionPalletHeight
+              .toFixed(2)
+              .toString(),
+            cartonLength: precisionCartonLength
+              .toFixed(2)
+              .toString(),
+            cartonWidth: precisionCartonWidth
+              .toFixed(2)
+              .toString(),
+            cartonHeight: precisionCartonHeight
               .toFixed(2)
               .toString(),
             maxShippingHeight: precisionMaxShippingHeight
               .toFixed(2)
               .toString(),
-            precisionLength,
-            precisionWidth,
-            precisionHeight,
+            precisionPalletLength,
+            precisionPalletWidth,
+            precisionPalletHeight,
+            precisionCartonLength,
+            precisionCartonWidth,
+            precisionCartonHeight,
             precisionMaxShippingHeight,
             usePrecisionMeasurements: true
           });
@@ -227,27 +333,42 @@ class PalletProvider extends Component {
 
         // cm to inches
         case 'cm':
-          precisionLength = oldLength / 2.54;
-          precisionWidth = oldWidth / 2.54;
-          precisionHeight = oldHeight / 2.54;
+          precisionPalletLength = oldPalletLength / 2.54;
+          precisionPalletWidth = oldPalletWidth / 2.54;
+          precisionPalletHeight = oldPalletHeight / 2.54;
+          precisionCartonLength = oldCartonLength / 2.54;
+          precisionCartonWidth = oldCartonWidth / 2.54;
+          precisionCartonHeight = oldCartonHeight / 2.54;
           precisionMaxShippingHeight =
             oldMaxShippingHeight / 2.54;
           this.setState({
-            palletLength: precisionLength
+            palletLength: precisionPalletLength
               .toFixed(2)
               .toString(),
-            palletWidth: precisionWidth
+            palletWidth: precisionPalletWidth
               .toFixed(2)
               .toString(),
-            palletHeight: precisionHeight
+            palletHeight: precisionPalletHeight
+              .toFixed(2)
+              .toString(),
+            cartonLength: precisionCartonLength
+              .toFixed(2)
+              .toString(),
+            cartonWidth: precisionCartonWidth
+              .toFixed(2)
+              .toString(),
+            cartonHeight: precisionCartonHeight
               .toFixed(2)
               .toString(),
             maxShippingHeight: precisionMaxShippingHeight
               .toFixed(2)
               .toString(),
-            precisionLength,
-            precisionWidth,
-            precisionHeight,
+            precisionPalletLength,
+            precisionPalletWidth,
+            precisionPalletHeight,
+            precisionCartonLength,
+            precisionCartonWidth,
+            precisionCartonHeight,
             precisionMaxShippingHeight,
             usePrecisionMeasurements: true
           });
@@ -255,27 +376,42 @@ class PalletProvider extends Component {
 
         // metres to inches
         case 'm':
-          precisionLength = oldLength * 39.37;
-          precisionWidth = oldWidth * 39.37;
-          precisionHeight = oldHeight * 39.37;
+          precisionPalletLength = oldPalletLength * 39.37;
+          precisionPalletWidth = oldPalletWidth * 39.37;
+          precisionPalletHeight = oldPalletHeight * 39.37;
+          precisionCartonLength = oldCartonLength * 39.37;
+          precisionCartonWidth = oldCartonWidth * 39.37;
+          precisionCartonHeight = oldCartonHeight * 39.37;
           precisionMaxShippingHeight =
             oldMaxShippingHeight * 39.37;
           this.setState({
-            palletLength: precisionLength
+            palletLength: precisionPalletLength
               .toFixed(2)
               .toString(),
-            palletWidth: precisionWidth
+            palletWidth: precisionPalletWidth
               .toFixed(2)
               .toString(),
-            palletHeight: precisionHeight
+            palletHeight: precisionPalletHeight
+              .toFixed(2)
+              .toString(),
+            cartonLength: precisionCartonLength
+              .toFixed(2)
+              .toString(),
+            cartonWidth: precisionCartonWidth
+              .toFixed(2)
+              .toString(),
+            cartonHeight: precisionCartonHeight
               .toFixed(2)
               .toString(),
             maxShippingHeight: precisionMaxShippingHeight
               .toFixed(2)
               .toString(),
-            precisionLength,
-            precisionWidth,
-            precisionHeight,
+            precisionPalletLength,
+            precisionPalletWidth,
+            precisionPalletHeight,
+            precisionCartonLength,
+            precisionCartonWidth,
+            precisionCartonHeight,
             precisionMaxShippingHeight,
             usePrecisionMeasurements: true
           });
@@ -289,9 +425,20 @@ class PalletProvider extends Component {
         // mm to metres
         case 'mm':
           this.setState({
-            palletLength: (oldLength / 1000).toString(),
-            palletWidth: (oldWidth / 1000).toString(),
-            palletHeight: (oldHeight / 1000).toString(),
+            palletLength: (
+              oldPalletLength / 1000
+            ).toString(),
+            palletWidth: (oldPalletWidth / 1000).toString(),
+            palletHeight: (
+              oldPalletHeight / 1000
+            ).toString(),
+            cartonLength: (
+              oldCartonLength / 1000
+            ).toString(),
+            cartonWidth: (oldCartonWidth / 1000).toString(),
+            cartonHeight: (
+              oldCartonHeight / 1000
+            ).toString(),
             maxShippingHeight: (
               oldMaxShippingHeight / 1000
             ).toString(),
@@ -302,9 +449,13 @@ class PalletProvider extends Component {
         // cm to metres
         case 'cm':
           this.setState({
-            palletLength: (oldLength / 100).toString(),
-            palletWidth: (oldWidth / 100).toString(),
-            palletHeight: (oldHeight / 100).toString(),
+            cartonLength: (
+              oldCartonLength / 100
+            ).toString(),
+            cartonWidth: (oldCartonWidth / 100).toString(),
+            cartonHeight: (
+              oldCartonHeight / 100
+            ).toString(),
             maxShippingHeight: (
               oldMaxShippingHeight / 100
             ).toString(),
@@ -314,27 +465,42 @@ class PalletProvider extends Component {
 
         // inches to metres
         case 'inch':
-          precisionLength = oldLength / 39.37;
-          precisionWidth = oldWidth / 39.37;
-          precisionHeight = oldHeight / 39.37;
+          precisionPalletLength = oldPalletLength / 39.37;
+          precisionPalletWidth = oldPalletWidth / 39.37;
+          precisionPalletHeight = oldPalletHeight / 39.37;
+          precisionCartonLength = oldCartonLength / 39.37;
+          precisionCartonWidth = oldCartonWidth / 39.37;
+          precisionCartonHeight = oldCartonHeight / 39.37;
           precisionMaxShippingHeight =
             oldMaxShippingHeight / 39.37;
           this.setState({
-            palletLength: precisionLength
+            palletLength: precisionPalletLength
               .toFixed(2)
               .toString(),
-            palletWidth: precisionWidth
+            palletWidth: precisionPalletWidth
               .toFixed(2)
               .toString(),
-            palletHeight: precisionHeight
+            palletHeight: precisionPalletHeight
+              .toFixed(2)
+              .toString(),
+            cartonLength: precisionCartonLength
+              .toFixed(2)
+              .toString(),
+            cartonWidth: precisionCartonWidth
+              .toFixed(2)
+              .toString(),
+            cartonHeight: precisionCartonHeight
               .toFixed(2)
               .toString(),
             maxShippingHeight: precisionMaxShippingHeight
               .toFixed(2)
               .toString(),
-            precisionLength,
-            precisionWidth,
-            precisionHeight,
+            precisionPalletLength,
+            precisionPalletWidth,
+            precisionPalletHeight,
+            precisionCartonLength,
+            precisionCartonWidth,
+            precisionCartonHeight,
             precisionMaxShippingHeight,
             usePrecisionMeasurements: true
           });
@@ -420,7 +586,7 @@ class PalletProvider extends Component {
     });
   };
 
-  // Handler function for measurement inputs.
+  // Handler function for inputs.
   handleUnitChange = (param, input, prevUnit) => {
     switch (param) {
       case 'palletLength':
@@ -449,7 +615,7 @@ class PalletProvider extends Component {
 
       case 'measurementUnit':
         this.setState({ measurementUnit: input });
-        this.convertSettingsMeasurements(input, prevUnit);
+        this.convertMeasurements(input, prevUnit);
         break;
 
       case 'maxShippingHeight':
@@ -468,21 +634,31 @@ class PalletProvider extends Component {
         this.convertWeights(input, prevUnit);
         break;
 
+      case 'sideLay':
+        this.setState({ sideLay: input });
+        break;
+
       default:
         break;
     }
   };
 
+  // Helper function to calculate the total height of the pallet.
   calcTotalHeight = layers => {
-    console.log('Calculating total height');
+    console.log('1. Calculating total height');
     return (
       layers * parseInt(this.state.cartonHeight) +
       parseInt(this.state.palletHeight)
     );
   };
 
+  /* 
+    MAY NOT BE NECESSARY!
+    Confirms the height of the pallet  is below or equal the set shipping maximum.
+    If it is above then will decrease the layers until it is below the maximum.
+  */
   verifyHeight = layers => {
-    console.log('Verifying height');
+    console.log('2. Verifying height');
     let totalHeight = this.calcTotalHeight(layers);
     let layersChanged = false;
     const maxHeight = parseInt(
@@ -490,6 +666,7 @@ class PalletProvider extends Component {
     );
 
     console.log(
+      '3. ',
       layers,
       totalHeight,
       layersChanged,
@@ -497,7 +674,7 @@ class PalletProvider extends Component {
     );
 
     if (totalHeight > maxHeight) {
-      console.log('Adjusting Height');
+      console.log('4. Adjusting Height');
       layersChanged = true;
       while (totalHeight > maxHeight) {
         layers--;
@@ -523,7 +700,7 @@ class PalletProvider extends Component {
 
   // Verify total boxes is below weight limit for shipping and adjust accordingly.
   verifyWeight = (boxes, perLayer, layers) => {
-    console.log('Verifying weight');
+    console.log('5. Verifying weight');
     const maxShippingWeight = parseFloat(
       this.state.maxShippingWeight
     );
@@ -541,7 +718,7 @@ class PalletProvider extends Component {
 
     // If current weight is above the maximum then calculate a new box total based on the maximum weight divided by the carton weight.
     if (weight > maxShippingWeight) {
-      console.log('Adjusting weight');
+      console.log('6. Adjusting weight');
       totalBoxes = Math.floor(
         (maxShippingWeight - palletWeight) / cartonWeight
       );
@@ -565,7 +742,7 @@ class PalletProvider extends Component {
 
   // Sets the results from the calcPallet function to state.
   setResult = match => {
-    console.log(match, match[0]);
+    console.log('7. ', match, match[0]);
     this.setState({
       boxesPerLayer: match[1].toString(),
       layoutType: match[3],
@@ -576,7 +753,7 @@ class PalletProvider extends Component {
 
   // Calculates pallet layout and numbers.
   calcPallet = () => {
-    console.log('Calculating....');
+    console.log('8. Calculating....');
 
     // Reset result values in state. Probably not necessary. CHECK LATER!
     this.setState({
@@ -623,6 +800,13 @@ class PalletProvider extends Component {
         ? cartonLength
         : cartonWidth;
 
+    if (this.state.sideLay && cartonHeight > longestSide) {
+      console.log('9. Side lay confirmed...');
+      shortestSide = longestSide;
+      longestSide = cartonHeight;
+      cartonHeight = shortestSide;
+    }
+
     let totalLayers = Math.floor(
       maxLayersHeight / cartonHeight
     );
@@ -655,6 +839,7 @@ class PalletProvider extends Component {
     );
 
     console.log(
+      '10. ',
       layer1,
       layer2,
       layer3,
@@ -711,7 +896,7 @@ class PalletProvider extends Component {
       checkLayer() === true
     ) {
       let bestFit = Math.max(layer3, layer7);
-      console.log('bestfit = ', bestFit);
+      console.log('11. bestfit = ', bestFit);
       if (bestFit == layer3)
         boxesPerLayer = bestFit * layer1;
       else if (bestFit == layer7)
@@ -793,8 +978,8 @@ class PalletProvider extends Component {
       stackTypes++;
       // *FUTURE ADDITION* Set diagram of layout to be displayed.
     }
-    console.log('stackTypes = ' + stackTypes);
-    console.log('types = ' + types);
+    console.log('12. stackTypes = ' + stackTypes);
+    console.log('13. types = ' + types);
     if (stackTypes > 1) {
       // Find largest match
       let bestMatch = null;
