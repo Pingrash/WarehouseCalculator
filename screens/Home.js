@@ -430,7 +430,8 @@ export default class Home extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    padding: 5
   },
   row: {
     flex: 1,
@@ -440,7 +441,7 @@ const styles = StyleSheet.create({
   },
   result: {
     flex: 3,
-    backgroundColor: 'black',
+    backgroundColor: '#081B33',
     justifyContent: 'space-around',
     alignItems: 'flex-end',
     paddingRight: 20
@@ -448,7 +449,7 @@ const styles = StyleSheet.create({
   calculation: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: 'black',
+    backgroundColor: '#081B33',
     justifyContent: 'space-around',
     alignSelf: 'stretch'
   },
@@ -468,7 +469,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   buttons: {
-    flex: 6,
+    flex: 5.5,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -476,13 +477,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     alignSelf: 'stretch',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    borderRadius: 80,
+    margin: 3
   },
   number: {
-    backgroundColor: 'grey'
+    backgroundColor: '#767D92'
   },
   operations: {
-    backgroundColor: '#545454'
+    backgroundColor: '#506680' // #545454
   },
   calculationText: {
     fontSize: 34,

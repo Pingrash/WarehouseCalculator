@@ -53,12 +53,11 @@ export default class MenuDrawer extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: 'red'
+    flex: 1
   },
   topSection: {
     height: 150,
-    backgroundColor: 'blue',
+    backgroundColor: '#353C51',
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -68,17 +67,19 @@ const styles = StyleSheet.create({
   },
   links: {
     flex: 1,
-    backgroundColor: '#f1f1f1',
-    paddingTop: 10
+    backgroundColor: '#767D92',
+    paddingTop: 5,
+    paddingBottom: 5
   },
   link: {
     flex: 1,
-    fontSize: 24,
+    fontSize: 26,
+    fontWeight: '400',
     padding: 6,
     paddingLeft: 14,
     margin: 5,
     textAlign: 'left',
-    color: 'black'
+    color: '#f1f1f1'
   },
   bottomSection: {
     height: 40,

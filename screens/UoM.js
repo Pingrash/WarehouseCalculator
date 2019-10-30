@@ -117,7 +117,6 @@ export default class UoM extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -174,7 +173,7 @@ const styles = StyleSheet.create({
     marginLeft: 50,
     width: 250,
     height: 60,
-    backgroundColor: 'blue',
+    backgroundColor: '#506680',
     alignItems: 'center',
     justifyContent: 'space-around',
     borderRadius: 20
