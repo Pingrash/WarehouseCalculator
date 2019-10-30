@@ -5,7 +5,8 @@ import {
   StyleSheet,
   View,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  Picker
 } from 'react-native';
 import MenuButton from '../components/MenuButton';
 import SettingsButton from '../components/SettingsButton';
@@ -28,7 +29,8 @@ export default class PalletEstimator extends Component {
       calculatePressed,
       measurementUnit,
       weightUnit,
-      error
+      error,
+      sideLay
     } = this.context;
 
     return (
@@ -37,7 +39,7 @@ export default class PalletEstimator extends Component {
           <View style={styles.settingsContainer}>
             <SettingsButton
               color='#f1f1f1'
-              background='black'
+              background='#081B33'
               type='pallet'
             />
             <SettingsModal />
@@ -87,6 +89,20 @@ export default class PalletEstimator extends Component {
               }
               keyboardType={'numeric'}
             />
+            <Text style={styles.inputLabel}>
+              Carton can be placed on side:{' '}
+            </Text>
+            <Picker
+              selectedValue={sideLay}
+              style={styles.picker}
+              onValueChange={itemValue =>
+                handleUnitChange('sideLay', itemValue)
+              }
+              mode='dialog'
+            >
+              <Picker.Item label='True' value={true} />
+              <Picker.Item label='False' value={false} />
+            </Picker>
           </View>
           <Text style={styles.helperText}>
             Pallet parameters and shipping conditions can be
@@ -101,7 +117,6 @@ export default class PalletEstimator extends Component {
           </View>
           <TouchableOpacity
             onPress={() => {
-              console.log('press');
               calcPallet();
             }}
             style={styles.button}
@@ -140,7 +155,8 @@ const styles = StyleSheet.create({
     paddingRight: 30
   },
   bottomContainer: {
-    flex: 1
+    flex: 1,
+    paddingBottom: 20
   },
   menuButtonContainer: {
     paddingBottom: 26
@@ -184,5 +200,14 @@ const styles = StyleSheet.create({
     color: '#f1f1f1',
     paddingLeft: 20,
     paddingTop: 0
+  },
+  picker: {
+    height: 40,
+    width: 100,
+    //transform: [{ scaleX: 1.8 }, { scaleY: 1.8 }],
+    marginLeft: 30,
+    color: '#f1f1f1',
+    backgroundColor: '#767D92',
+    marginTop: 15
   }
 });
