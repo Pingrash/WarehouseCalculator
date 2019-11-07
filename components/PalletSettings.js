@@ -5,7 +5,8 @@ import {
   View,
   TextInput,
   ScrollView,
-  Picker
+  Picker,
+  TouchableOpacity
 } from 'react-native';
 import { PalletContext } from '../context/PalletContext';
 
@@ -21,7 +22,8 @@ export default class PalletSettings extends Component {
       weightUnit,
       maxShippingHeight,
       maxShippingWeight,
-      handleUnitChange
+      handleUnitChange,
+      setDefaults
     } = this.context;
     return (
       <ScrollView style={styles.scrollView}>
@@ -126,6 +128,14 @@ export default class PalletSettings extends Component {
             }
             keyboardType={'numeric'}
           />
+          <TouchableOpacity
+            style={styles.defaultBtn}
+            onPress={setDefaults}
+          >
+            <Text style={styles.btnText}>
+              Set Current As Default
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     );
@@ -161,5 +171,17 @@ const styles = StyleSheet.create({
     width: 100,
     transform: [{ scaleX: 1.8 }, { scaleY: 1.8 }],
     marginLeft: 30
+  },
+  defaultBtn: {
+    width: 250,
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    borderRadius: 20,
+    backgroundColor: '#506680'
+  },
+  btnText: {
+    fontSize: 24,
+    color: '#f1f1f1'
   }
 });
