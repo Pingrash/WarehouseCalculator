@@ -52,6 +52,7 @@ export default class PalletSummary extends Component {
         <Text style={[styles.text, styles.cap]}>
           Layout Type: {layoutType}
         </Text>
+        <Text style={styles.text}>Example:</Text>
         <LayoutPreview />
       </View>
     );
