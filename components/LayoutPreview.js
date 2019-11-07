@@ -1,47 +1,59 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import { PalletContext } from '../context/PalletContext';
-import SvgUri from 'react-native-svg-uri';
 
 export default class LayoutPreview extends Component {
   static contextType = PalletContext;
   render() {
     const { layoutType } = this.context;
-    let path = '';
-
-    // Set path based on the layout type set in state.
-    switch (layoutType) {
-      case 'single':
-        path = '../assets/singleLayer.svg';
-        break;
-      case 'square':
-        path = '../assets/squareLayer.svg';
-        break;
-      case 'triple':
-        path = '../assets/tripleLayer.svg';
-        break;
-      case 'castle':
-        path = '../assets/castleLayer.svg';
-        break;
-      case 'brick':
-        path = '../assets/brickLayer.svg';
-        break;
-      default:
-        break;
-    }
 
     return (
       <View style={styles.container}>
-        <SvgUri
-          width='200'
-          height='200'
-          source={require(path)}
-        />
+        {layoutType === 'single' ? (
+          <Image
+            source={require('../assets/singleLayer.png')}
+            style={styles.image}
+          />
+        ) : null}
+        {layoutType === 'brick' ? (
+          <Image
+            source={require('../assets/brickLayer.png')}
+            style={styles.image}
+          />
+        ) : null}
+        {layoutType === 'castle' ? (
+          <Image
+            source={require('../assets/castleLayer.png')}
+            style={styles.image}
+          />
+        ) : null}
+        {layoutType === 'square' ? (
+          <Image
+            source={require('../assets/squareLayer.png')}
+            style={styles.image}
+          />
+        ) : null}
+        {layoutType === 'triple' ? (
+          <Image
+            source={require('../assets/tripleLayer.png')}
+            style={styles.image}
+          />
+        ) : null}
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {}
+  container: {
+    width: '95%',
+    height: 300,
+    marginTop: 10,
+    marginBottom: 10
+  },
+  image: {
+    resizeMode: 'contain',
+    width: '100%',
+    height: '100%'
+  }
 });
