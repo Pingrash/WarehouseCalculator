@@ -30,8 +30,12 @@ export default class PalletEstimator extends Component {
       measurementUnit,
       weightUnit,
       error,
-      sideLay
+      sideLay,
+      defaultsRetrieved,
+      applyDefaults
     } = this.context;
+
+    if (!defaultsRetrieved) applyDefaults();
 
     return (
       <ScrollView>
