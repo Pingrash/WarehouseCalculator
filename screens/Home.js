@@ -57,7 +57,7 @@ export default class Home extends Component {
   }
 
   /*
-    Result calcultion function that depending on wether the equal button is pressed will either set the current evaluation in resultText or into calculationText.
+    Result calculation function that depending on wether the equal button is pressed will either set the current evaluation in resultText or into calculationText.
 
     Results from the eval function must be parsed into a string when set into state so it can be displayed properly.
   */
