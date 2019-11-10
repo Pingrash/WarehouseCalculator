@@ -148,15 +148,6 @@ class PalletProvider extends Component {
   convertMeasurements = (newUnit, prevUnit) => {
     // Variables for inch calculations.
     // Storage of precision versions of any inch calculations is necessary as using rounded results only leads to incorrect conversions if the user changes unit type multiple times.
-    let {
-      precisionPalletLength,
-      precisionPalletWidth,
-      precisionPalletHeight,
-      precisionCartonLength,
-      precisionCartonWidth,
-      precisionCartonHeight,
-      precisionMaxShippingHeight
-    } = this.state;
 
     let oldPalletLength,
       oldPalletWidth,
@@ -190,6 +181,7 @@ class PalletProvider extends Component {
       );
     }
 
+    // Array of old measurements to be mapped over later.
     const oldMeasurements = [
       oldPalletLength,
       oldPalletWidth,
@@ -199,8 +191,9 @@ class PalletProvider extends Component {
       oldCartonHeight,
       oldMaxShippingHeight
     ];
-    let newMeasurements, preciseMeasurements;
+    let newMeasurements;
 
+    // Loop over the newMeasurements array and replace any instances of 'NaN' with '0'.
     const checkNaNs = () => {
       for (
         let index = 0;
@@ -208,73 +201,76 @@ class PalletProvider extends Component {
         index++
       ) {
         const element = newMeasurements[index];
-        if (isNaN(element)) newMeasurements[index] = '0';
+        if (isNaN(element)) newMeasurements[index] = 0;
       }
     };
 
-    const setNewMeasurements = precise => {
-      precise
-        ? this.setState({
-            palletLength: newMeasurements[0],
-            palletWidth: newMeasurements[1],
-            palletHeight: newMeasurements[2],
-            cartonLength: newMeasurements[3],
-            cartonWidth: newMeasurements[4],
-            cartonHeight: newMeasurements[5],
-            maxShippingHeight: newMeasurements[6],
-            precisionPalletLength: preciseMeasurements[0],
-            precisionPalletWidth: preciseMeasurements[1],
-            precisionPalletHeight: preciseMeasurements[2],
-            precisionCartonLength: preciseMeasurements[3],
-            precisionCartonWidth: preciseMeasurements[4],
-            precisionCartonHeight: preciseMeasurements[5],
-            precisionMaxShippingHeight:
-              preciseMeasurements[6],
-            usePrecisionMeasurements: precise
-          })
-        : this.setState({
-            palletLength: newMeasurements[0],
-            palletWidth: newMeasurements[1],
-            palletHeight: newMeasurements[2],
-            cartonLength: newMeasurements[3],
-            cartonWidth: newMeasurements[4],
-            cartonHeight: newMeasurements[5],
-            maxShippingHeight: newMeasurements[6],
-            usePrecisionMeasurements: precise
-          });
+    /*
+      Sets new measurements to state.
+      Calls checkNaNs function first.
+    */
+    const setNewMeasurements = () => {
+      checkNaNs();
+      this.setState({
+        palletLength: newMeasurements[0]
+          .toFixed(2)
+          .toString(),
+        palletWidth: newMeasurements[1]
+          .toFixed(2)
+          .toString(),
+        palletHeight: newMeasurements[2]
+          .toFixed(2)
+          .toString(),
+        cartonLength: newMeasurements[3]
+          .toFixed(2)
+          .toString(),
+        cartonWidth: newMeasurements[4]
+          .toFixed(2)
+          .toString(),
+        cartonHeight: newMeasurements[5]
+          .toFixed(2)
+          .toString(),
+        maxShippingHeight: newMeasurements[6]
+          .toFixed(2)
+          .toString(),
+        precisionPalletLength: newMeasurements[0],
+        precisionPalletWidth: newMeasurements[1],
+        precisionPalletHeight: newMeasurements[2],
+        precisionCartonLength: newMeasurements[3],
+        precisionCartonWidth: newMeasurements[4],
+        precisionCartonHeight: newMeasurements[5],
+        precisionMaxShippingHeight: newMeasurements[6],
+        usePrecisionMeasurements: true
+      });
     };
 
-    // Convert measurements and set the results.
+    /*
+      Convert measurements by mapping over the oldMeasurements array.
+    */
     if (newUnit === 'mm') {
       switch (prevUnit) {
         // cm to mm
         case 'cm':
-          newMeasurements = oldMeasurements.map(x =>
-            (x * 10).toString()
+          newMeasurements = oldMeasurements.map(
+            x => x * 10
           );
-          checkNaNs();
-          setNewMeasurements(false);
+          setNewMeasurements();
           break;
 
         // inches to mm
         case 'inch':
-          newMeasurements = oldMeasurements.map(x =>
-            (x * 25.4).toFixed(2).toString()
-          );
-          preciseMeasurements = oldMeasurements.map(
+          newMeasurements = oldMeasurements.map(
             x => x * 25.4
           );
-          checkNaNs();
-          setNewMeasurements(true);
+          setNewMeasurements();
           break;
 
         // metres to mm
         case 'm':
-          newMeasurements = oldMeasurements.map(x =>
-            (x * 1000).toString()
+          newMeasurements = oldMeasurements.map(
+            x => x * 1000
           );
-          checkNaNs();
-          setNewMeasurements(false);
+          setNewMeasurements();
           break;
 
         default:
@@ -284,32 +280,26 @@ class PalletProvider extends Component {
       switch (prevUnit) {
         // mm to cm
         case 'mm':
-          newMeasurements = oldMeasurements.map(x =>
-            (x / 10).toString()
+          newMeasurements = oldMeasurements.map(
+            x => x / 10
           );
-          checkNaNs();
-          setNewMeasurements(false);
+          setNewMeasurements();
           break;
 
         // inches to cm
         case 'inch':
-          newMeasurements = oldMeasurements.map(x =>
-            (x * 2.54).toFixed(2).toString()
-          );
-          preciseMeasurements = oldMeasurements.map(
+          newMeasurements = oldMeasurements.map(
             x => x * 2.54
           );
-          checkNaNs();
-          setNewMeasurements(true);
+          setNewMeasurements();
           break;
 
         // metres to cm
         case 'm':
-          newMeasurements = oldMeasurements.map(x =>
-            (x * 100).toString()
+          newMeasurements = oldMeasurements.map(
+            x => x * 100
           );
-          checkNaNs();
-          setNewMeasurements(false);
+          setNewMeasurements();
           break;
 
         default:
@@ -319,38 +309,26 @@ class PalletProvider extends Component {
       switch (prevUnit) {
         // mm to inches
         case 'mm':
-          newMeasurements = oldMeasurements.map(x =>
-            (x / 25.4).toFixed(2).toString()
-          );
-          preciseMeasurements = oldMeasurements.map(
+          newMeasurements = oldMeasurements.map(
             x => x / 25.4
           );
-          checkNaNs();
-          setNewMeasurements(true);
+          setNewMeasurements();
           break;
 
         // cm to inches
         case 'cm':
-          newMeasurements = oldMeasurements.map(x =>
-            (x / 2.54).toFixed(2).toString()
-          );
-          preciseMeasurements = oldMeasurements.map(
+          newMeasurements = oldMeasurements.map(
             x => x / 2.54
           );
-          checkNaNs();
-          setNewMeasurements(true);
+          setNewMeasurements();
           break;
 
         // metres to inches
         case 'm':
-          newMeasurements = oldMeasurements.map(x =>
-            (x * 39.37).toFixed(2).toString()
-          );
-          preciseMeasurements = oldMeasurements.map(
+          newMeasurements = oldMeasurements.map(
             x => x * 39.37
           );
-          checkNaNs();
-          setNewMeasurements(true);
+          setNewMeasurements();
           break;
 
         default:
@@ -360,32 +338,26 @@ class PalletProvider extends Component {
       switch (prevUnit) {
         // mm to metres
         case 'mm':
-          newMeasurements = oldMeasurements.map(x =>
-            (x / 1000).toString()
+          newMeasurements = oldMeasurements.map(
+            x => x / 1000
           );
-          checkNaNs();
-          setNewMeasurements(false);
+          setNewMeasurements();
           break;
 
         // cm to metres
         case 'cm':
-          newMeasurements = oldMeasurements.map(x =>
-            (x / 100).toString()
+          newMeasurements = oldMeasurements.map(
+            x => x / 100
           );
-          checkNaNs();
-          setNewMeasurements(false);
+          setNewMeasurements();
           break;
 
         // inches to metres
         case 'inch':
-          newMeasurements = oldMeasurements.map(x =>
-            (x / 39.37).toFixed(2).toString()
-          );
-          preciseMeasurements = oldMeasurements.map(
+          newMeasurements = oldMeasurements.map(
             x => x / 39.37
           );
-          checkNaNs();
-          setNewMeasurements(true);
+          setNewMeasurements();
           break;
 
         default:
@@ -696,19 +668,19 @@ class PalletProvider extends Component {
 
     let layer1 = Math.floor(palletWidth / shortestSide);
     let layer2 = Math.floor(
-      (palletWidth % shortestSide) / longestSide
+      (palletWidth - shortestSide) / longestSide
     );
     let layer3 = Math.floor(palletLength / longestSide);
     let layer4 = Math.floor(
-      (palletLength % longestSide) / shortestSide
+      (palletLength - longestSide) / shortestSide
     );
     let layer5 = Math.floor(palletWidth / longestSide);
     let layer6 = Math.floor(
-      (palletWidth % longestSide) / shortestSide
+      (palletWidth - longestSide) / shortestSide
     );
     let layer7 = Math.floor(palletLength / shortestSide);
     let layer8 = Math.floor(
-      (palletLength % shortestSide) / longestSide
+      (palletLength - shortestSide) / longestSide
     );
     let layer9 = Math.floor(
       (palletWidth % longestSide) / cartonHeight
@@ -802,6 +774,8 @@ class PalletProvider extends Component {
         outerLayersBoxes * totalLayers +
         innerLayers * totalInnerLayers;
 
+      boxesPerLayer = outerLayersBoxes + innerLayers;
+
       temp = [
         totalLayers,
         boxesPerLayer,
@@ -819,6 +793,7 @@ class PalletProvider extends Component {
       );
 
       totalBoxes = totalLayers * 4 + totalMiddleLayers * 4;
+      boxesPerLayer = 8;
 
       temp = [
         totalLayers,
@@ -832,8 +807,8 @@ class PalletProvider extends Component {
 
     // Brick Stack
     if (
-      (layer8 && layer2) === 1 &&
-      (layer7 && layer1) > 1
+      (layer8 && layer2) == 1 &&
+      (layer7 && layer1) >= 1
     ) {
       boxesPerLayer = layer7 * 4;
       totalBoxes = boxesPerLayer * totalLayers;
