@@ -1,24 +1,35 @@
 {
   "expo": {
-    "name": "Calculator",
-    "slug": "Calculator",
+    "name": "Warehouse Calculator",
+    "slug": "warehouse-calculator",
     "privacy": "public",
+    "description": "A handy calculator app for assisting in warehouse activities.",
     "sdkVersion": "35.0.0",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#081B33"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "androidNavigationBar": {
+      "barStyle": "dark-content"
+    },
+    "githubUrl": "https://github.com/Pingrash/WarehouseCalculator"
   }
 }
