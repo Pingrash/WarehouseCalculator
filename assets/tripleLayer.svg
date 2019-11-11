@@ -43,9 +43,9 @@
      inkscape:window-height="986"
      id="namedview1424"
      showgrid="false"
-     inkscape:zoom="0.4204826"
-     inkscape:cx="809.24252"
-     inkscape:cy="-284.01754"
+     inkscape:zoom="0.8409652"
+     inkscape:cx="288.68772"
+     inkscape:cy="274.07655"
      inkscape:window-x="-11"
      inkscape:window-y="-11"
      inkscape:window-maximized="1"
@@ -56,77 +56,68 @@
      width="145.89999"
      height="145.89999"
      id="rect1398"
-     style="fill:#ff0000;stroke-width:0.22299001" />
-  <g
-     id="g1420"
-     style="stroke:#000000"
-     transform="translate(-26.569,-57.741001)">
-    <g
-       id="g1412"
-       style="stroke-width:0.26458001">
-      <rect
-         x="30.238001"
-         y="68.702003"
-         width="46.112999"
-         height="46.112999"
-         id="rect1400"
-         style="fill:#00ff00" />
-      <rect
-         x="76.350998"
-         y="68.702003"
-         width="46.112999"
-         height="46.112999"
-         id="rect1402"
-         style="fill:#ffff00" />
-      <rect
-         x="122.46"
-         y="68.702003"
-         width="46.112999"
-         height="46.112999"
-         id="rect1404"
-         style="fill:#00ff00" />
-      <rect
-         x="30.237"
-         y="141.21001"
-         width="46.112999"
-         height="46.112999"
-         id="rect1406"
-         style="fill:#00ff00" />
-      <rect
-         x="76.349998"
-         y="141.21001"
-         width="46.112999"
-         height="46.112999"
-         id="rect1408"
-         style="fill:#ffff00" />
-      <rect
-         x="122.46"
-         y="141.21001"
-         width="46.112999"
-         height="46.112999"
-         id="rect1410"
-         style="fill:#00ff00" />
-    </g>
-    <rect
-       x="30.237"
-       y="114.81"
-       width="46.069"
-       height="26.398001"
-       id="rect1414"
-       style="fill:#ffff00;stroke-width:0.23919" />
-    <rect
-       x="76.306"
-       y="114.82"
-       width="46.157001"
-       height="26.393999"
-       id="rect1416"
-       style="fill:#00ff00;stroke-width:0.2394" />
-    <rect
-       x="122.67"
-       y="114.82"
-       width="45.903"
-       height="26.396"
-       id="rect1418"
-       style="fill:#ffff00;stroke-width:0.23875" />
-  </g>
+     style="fill:#c60009;stroke-width:0.22299001;fill-opacity:0.60606062" />
+  <rect
+     x="3.6690009"
+     y="10.961002"
+     width="46.112999"
+     height="46.112999"
+     id="rect1400"
+     style="fill:#3681f1;stroke:#000000;stroke-width:1.58749997;fill-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
+  <rect
+     x="49.781998"
+     y="10.961002"
+     width="46.112999"
+     height="46.112999"
+     id="rect1402"
+     style="fill:#ffd42a;stroke:#000000;stroke-width:1.58749997;stroke-miterlimit:4;stroke-dasharray:none" />
+  <rect
+     x="95.890999"
+     y="10.961002"
+     width="46.112999"
+     height="46.112999"
+     id="rect1404"
+     style="fill:#3681f1;stroke:#000000;stroke-width:1.58749997;fill-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
+  <rect
+     x="3.6679995"
+     y="83.469009"
+     width="46.112999"
+     height="46.112999"
+     id="rect1406"
+     style="fill:#3681f1;stroke:#000000;stroke-width:1.58749997;fill-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
+  <rect
+     x="49.780998"
+     y="83.469009"
+     width="46.112999"
+     height="46.112999"
+     id="rect1408"
+     style="fill:#ffd42a;stroke:#000000;stroke-width:1.58749997;stroke-miterlimit:4;stroke-dasharray:none" />
+  <rect
+     x="95.890999"
+     y="83.469009"
+     width="46.112999"
+     height="46.112999"
+     id="rect1410"
+     style="fill:#3681f1;stroke:#000000;stroke-width:1.58749997;fill-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
+  <rect
+     style="fill:#ffd42a;stroke:#000000;stroke-width:1.58749997;stroke-miterlimit:4;stroke-dasharray:none"
+     id="rect1414"
+     height="26.398001"
+     width="46.069"
+     y="57.068996"
+     x="3.6679995" />
+  <rect
+     style="fill:#3681f1;stroke:#000000;stroke-width:1.58749997;fill-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+     id="rect1416"
+     height="26.393999"
+     width="46.157001"
+     y="57.078999"
+     x="49.737" />
+  <rect
+     style="fill:#ffd42a;stroke:#000000;stroke-width:1.58749997;stroke-miterlimit:4;stroke-dasharray:none"
+     id="rect1418"
+     height="26.396"
+     width="45.903"
+     y="57.078999"
+     x="96.100998" />
 </svg>
