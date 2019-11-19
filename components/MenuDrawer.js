@@ -40,7 +40,7 @@ export default class MenuDrawer extends Component {
         </View>
         <View style={styles.bottomSection}>
           <Text style={styles.bottomText}>
-            Created by Lachlan Mackenzie | 2019
+            Created by Lachlan Mackenzie | 2019 v1.1
           </Text>
         </View>
       </View>
