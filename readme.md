@@ -35,3 +35,15 @@ The settings screens for the Cubic Calculator and the Pallet Estimator can conve
 - Basic React Native features and syntax
 - Use of multiple context APIs for handling state throughout the app
 - React Native navigation and drawer menu
+
+## Changelog
+
+### v1.0
+
+Initial publication
+
+### v1.1
+
+- Minor drawer visual adjustment.
+
+- Logic fix for brick stack type selection in Pallet Estimator.
