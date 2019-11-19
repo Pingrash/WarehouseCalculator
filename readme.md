@@ -45,5 +45,5 @@ Initial publication
 ### v1.1
 
 - Minor drawer visual adjustment.
-
 - Logic fix for brick stack type selection in Pallet Estimator.
+- Pressing a number in the home calculator will now clear the screen to allow a new calculation to be started without having to tap the clear button.
