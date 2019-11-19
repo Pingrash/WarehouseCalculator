@@ -1,23 +1,23 @@
-import React, { Component } from 'react';
-import { AsyncStorage, Alert } from 'react-native';
+import React, { Component } from "react";
+import { AsyncStorage, Alert } from "react-native";
 
 const PalletContext = React.createContext();
 
 class PalletProvider extends Component {
   state = {
-    palletLength: '117',
-    palletWidth: '117',
-    palletHeight: '14.5',
-    palletWeight: '30',
-    measurementUnit: 'cm',
-    cartonLength: '',
-    cartonWidth: '',
-    cartonHeight: '',
-    cartonWeight: '',
-    maxShippingHeight: '180',
-    maxShippingWeight: '1000',
-    weightUnit: 'kg',
-    totalBoxes: '',
+    palletLength: "117",
+    palletWidth: "117",
+    palletHeight: "14.5",
+    palletWeight: "30",
+    measurementUnit: "cm",
+    cartonLength: "",
+    cartonWidth: "",
+    cartonHeight: "",
+    cartonWeight: "",
+    maxShippingHeight: "180",
+    maxShippingWeight: "1000",
+    weightUnit: "kg",
+    totalBoxes: "",
     totalLayers: null,
     boxesPerLayer: null,
     layoutType: null,
@@ -79,17 +79,15 @@ class PalletProvider extends Component {
   // Gets the defaults item from AsyncStorage, parses to JSON then returns the parsed defaults.
   retrieveDefaults = async () => {
     try {
-      const retrievedItem = await AsyncStorage.getItem(
-        'defaults'
-      );
+      const retrievedItem = await AsyncStorage.getItem("defaults");
       const item = JSON.parse(retrievedItem);
       this.setState({ defaultsRetrieved: true });
       return item;
     } catch (error) {
       Alert.alert(
-        'Defaults Error',
+        "Defaults Error",
         `Unable to load defaults! ${error.message}`,
-        { text: 'OK', style: 'error' }
+        { text: "OK", style: "error" }
       );
       return null;
     }
@@ -106,14 +104,14 @@ class PalletProvider extends Component {
       This keeps the settings saved in a format that can easily be iterated over and set to state later on.
     */
     obj = [
-      ['palletLength', this.state.palletLength],
-      ['palletWidth', this.state.palletWidth],
-      ['palletHeight', this.state.palletHeight],
-      ['palletWeight', this.state.palletWeight],
-      ['measurementUnit', this.state.measurementUnit],
-      ['weightUnit', this.state.weightUnit],
-      ['maxShippingHeight', this.state.maxShippingHeight],
-      ['maxShippingWeight', this.state.maxShippingWeight]
+      ["palletLength", this.state.palletLength],
+      ["palletWidth", this.state.palletWidth],
+      ["palletHeight", this.state.palletHeight],
+      ["palletWeight", this.state.palletWeight],
+      ["measurementUnit", this.state.measurementUnit],
+      ["weightUnit", this.state.weightUnit],
+      ["maxShippingHeight", this.state.maxShippingHeight],
+      ["maxShippingWeight", this.state.maxShippingWeight]
     ];
 
     /*
@@ -121,24 +119,21 @@ class PalletProvider extends Component {
       Uses 'defaults' as the item key and the object is stringifed so it can be saved.
     */
     try {
-      await AsyncStorage.setItem(
-        'defaults',
-        JSON.stringify(obj)
-      );
+      await AsyncStorage.setItem("defaults", JSON.stringify(obj));
     } catch (error) {
       Alert.alert(
-        'Defaults Error',
+        "Defaults Error",
         `Your new default settings were unable to be saved! ${error.message}`,
-        { text: 'OK', style: 'error' }
+        { text: "OK", style: "error" }
       );
     }
     Alert.alert(
-      'Defaults Saved',
-      'Your new default settings were saved successfully!',
+      "Defaults Saved",
+      "Your new default settings were saved successfully!",
       [
         {
-          text: 'OK',
-          style: 'success'
+          text: "OK",
+          style: "success"
         }
       ]
     );
@@ -166,8 +161,7 @@ class PalletProvider extends Component {
       oldCartonLength = this.state.precisionCartonLength;
       oldCartonWidth = this.state.precisionCartonWidth;
       oldCartonHeight = this.state.precisionCartonHeight;
-      oldMaxShippingHeight = this.state
-        .precisionMaxShippingHeight;
+      oldMaxShippingHeight = this.state.precisionMaxShippingHeight;
     } else {
       // Parse current measurements to floats
       oldPalletLength = parseFloat(this.state.palletLength);
@@ -176,9 +170,7 @@ class PalletProvider extends Component {
       oldCartonLength = parseFloat(this.state.cartonLength);
       oldCartonWidth = parseFloat(this.state.cartonWidth);
       oldCartonHeight = parseFloat(this.state.cartonHeight);
-      oldMaxShippingHeight = parseFloat(
-        this.state.maxShippingHeight
-      );
+      oldMaxShippingHeight = parseFloat(this.state.maxShippingHeight);
     }
 
     // Array of old measurements to be mapped over later.
@@ -195,11 +187,7 @@ class PalletProvider extends Component {
 
     // Loop over the newMeasurements array and replace any instances of 'NaN' with '0'.
     const checkNaNs = () => {
-      for (
-        let index = 0;
-        index < newMeasurements.length;
-        index++
-      ) {
+      for (let index = 0; index < newMeasurements.length; index++) {
         const element = newMeasurements[index];
         if (isNaN(element)) newMeasurements[index] = 0;
       }
@@ -212,27 +200,13 @@ class PalletProvider extends Component {
     const setNewMeasurements = () => {
       checkNaNs();
       this.setState({
-        palletLength: newMeasurements[0]
-          .toFixed(2)
-          .toString(),
-        palletWidth: newMeasurements[1]
-          .toFixed(2)
-          .toString(),
-        palletHeight: newMeasurements[2]
-          .toFixed(2)
-          .toString(),
-        cartonLength: newMeasurements[3]
-          .toFixed(2)
-          .toString(),
-        cartonWidth: newMeasurements[4]
-          .toFixed(2)
-          .toString(),
-        cartonHeight: newMeasurements[5]
-          .toFixed(2)
-          .toString(),
-        maxShippingHeight: newMeasurements[6]
-          .toFixed(2)
-          .toString(),
+        palletLength: newMeasurements[0].toFixed(2).toString(),
+        palletWidth: newMeasurements[1].toFixed(2).toString(),
+        palletHeight: newMeasurements[2].toFixed(2).toString(),
+        cartonLength: newMeasurements[3].toFixed(2).toString(),
+        cartonWidth: newMeasurements[4].toFixed(2).toString(),
+        cartonHeight: newMeasurements[5].toFixed(2).toString(),
+        maxShippingHeight: newMeasurements[6].toFixed(2).toString(),
         precisionPalletLength: newMeasurements[0],
         precisionPalletWidth: newMeasurements[1],
         precisionPalletHeight: newMeasurements[2],
@@ -247,116 +221,92 @@ class PalletProvider extends Component {
     /*
       Convert measurements by mapping over the oldMeasurements array.
     */
-    if (newUnit === 'mm') {
+    if (newUnit === "mm") {
       switch (prevUnit) {
         // cm to mm
-        case 'cm':
-          newMeasurements = oldMeasurements.map(
-            x => x * 10
-          );
+        case "cm":
+          newMeasurements = oldMeasurements.map(x => x * 10);
           setNewMeasurements();
           break;
 
         // inches to mm
-        case 'inch':
-          newMeasurements = oldMeasurements.map(
-            x => x * 25.4
-          );
+        case "inch":
+          newMeasurements = oldMeasurements.map(x => x * 25.4);
           setNewMeasurements();
           break;
 
         // metres to mm
-        case 'm':
-          newMeasurements = oldMeasurements.map(
-            x => x * 1000
-          );
+        case "m":
+          newMeasurements = oldMeasurements.map(x => x * 1000);
           setNewMeasurements();
           break;
 
         default:
           break;
       }
-    } else if (newUnit === 'cm') {
+    } else if (newUnit === "cm") {
       switch (prevUnit) {
         // mm to cm
-        case 'mm':
-          newMeasurements = oldMeasurements.map(
-            x => x / 10
-          );
+        case "mm":
+          newMeasurements = oldMeasurements.map(x => x / 10);
           setNewMeasurements();
           break;
 
         // inches to cm
-        case 'inch':
-          newMeasurements = oldMeasurements.map(
-            x => x * 2.54
-          );
+        case "inch":
+          newMeasurements = oldMeasurements.map(x => x * 2.54);
           setNewMeasurements();
           break;
 
         // metres to cm
-        case 'm':
-          newMeasurements = oldMeasurements.map(
-            x => x * 100
-          );
+        case "m":
+          newMeasurements = oldMeasurements.map(x => x * 100);
           setNewMeasurements();
           break;
 
         default:
           break;
       }
-    } else if (newUnit === 'inch') {
+    } else if (newUnit === "inch") {
       switch (prevUnit) {
         // mm to inches
-        case 'mm':
-          newMeasurements = oldMeasurements.map(
-            x => x / 25.4
-          );
+        case "mm":
+          newMeasurements = oldMeasurements.map(x => x / 25.4);
           setNewMeasurements();
           break;
 
         // cm to inches
-        case 'cm':
-          newMeasurements = oldMeasurements.map(
-            x => x / 2.54
-          );
+        case "cm":
+          newMeasurements = oldMeasurements.map(x => x / 2.54);
           setNewMeasurements();
           break;
 
         // metres to inches
-        case 'm':
-          newMeasurements = oldMeasurements.map(
-            x => x * 39.37
-          );
+        case "m":
+          newMeasurements = oldMeasurements.map(x => x * 39.37);
           setNewMeasurements();
           break;
 
         default:
           break;
       }
-    } else if (newUnit === 'm') {
+    } else if (newUnit === "m") {
       switch (prevUnit) {
         // mm to metres
-        case 'mm':
-          newMeasurements = oldMeasurements.map(
-            x => x / 1000
-          );
+        case "mm":
+          newMeasurements = oldMeasurements.map(x => x / 1000);
           setNewMeasurements();
           break;
 
         // cm to metres
-        case 'cm':
-          newMeasurements = oldMeasurements.map(
-            x => x / 100
-          );
+        case "cm":
+          newMeasurements = oldMeasurements.map(x => x / 100);
           setNewMeasurements();
           break;
 
         // inches to metres
-        case 'inch':
-          newMeasurements = oldMeasurements.map(
-            x => x / 39.37
-          );
+        case "inch":
+          newMeasurements = oldMeasurements.map(x => x / 39.37);
           setNewMeasurements();
           break;
 
@@ -378,23 +328,21 @@ class PalletProvider extends Component {
       ? parseFloat(this.state.precisionCartonWeight)
       : parseFloat(this.state.cartonWeight);
 
-    let maxShippingWeight = this.state
-      .precisionMaxShippingWeight
+    let maxShippingWeight = this.state.precisionMaxShippingWeight
       ? parseFloat(this.state.precisionMaxShippingWeight)
       : parseFloat(this.state.maxShippingWeight);
 
-    let totalPalletWeight = this.state
-      .precisionTotalPalletWeight
+    let totalPalletWeight = this.state.precisionTotalPalletWeight
       ? this.state.precisionTotalPalletWeight
       : parseFloat(this.state.totalPalletWeight);
 
-    if (newUnit === 'kg' && prevUnit === 'lbs') {
+    if (newUnit === "kg" && prevUnit === "lbs") {
       // Convert pounds to kilograms
       palletWeight = palletWeight / 2.205;
       cartonWeight = cartonWeight / 2.205;
       maxShippingWeight = maxShippingWeight / 2.205;
       totalPalletWeight = totalPalletWeight / 2.205;
-    } else if (newUnit === 'lbs' && prevUnit === 'kg') {
+    } else if (newUnit === "lbs" && prevUnit === "kg") {
       // Convert kilograms to pounds
       palletWeight = palletWeight * 2.205;
       cartonWeight = cartonWeight * 2.205;
@@ -404,15 +352,9 @@ class PalletProvider extends Component {
 
     // Pallet and carton weight are fixed to two decimal places and parsed to strings.
     // This is done outside of setState to simplify a validation check later.
-    let newPalletWeight = palletWeight
-      .toFixed(2)
-      .toString();
-    let newCartonWeight = cartonWeight
-      .toFixed(2)
-      .toString();
-    let newTotalPalletWeight = totalPalletWeight
-      .toFixed(2)
-      .toString();
+    let newPalletWeight = palletWeight.toFixed(2).toString();
+    let newCartonWeight = cartonWeight.toFixed(2).toString();
+    let newTotalPalletWeight = totalPalletWeight.toFixed(2).toString();
 
     /* Set results to state.
      Precision weights are stored in their current state.
@@ -424,15 +366,9 @@ class PalletProvider extends Component {
       precisionCartonWeight: cartonWeight,
       precisionMaxShippingWeight: maxShippingWeight,
       precisionTotalPalletWeight: totalPalletWeight,
-      palletWeight: isNaN(newPalletWeight)
-        ? null
-        : newPalletWeight,
-      cartonWeight: isNaN(newCartonWeight)
-        ? null
-        : newCartonWeight,
-      maxShippingWeight: Math.floor(
-        maxShippingWeight
-      ).toString(),
+      palletWeight: isNaN(newPalletWeight) ? null : newPalletWeight,
+      cartonWeight: isNaN(newCartonWeight) ? null : newCartonWeight,
+      maxShippingWeight: Math.floor(maxShippingWeight).toString(),
       totalPalletWeight: isNaN(newTotalPalletWeight)
         ? null
         : newTotalPalletWeight,
@@ -443,52 +379,52 @@ class PalletProvider extends Component {
   // Handler function for inputs.
   handleUnitChange = (param, input, prevUnit) => {
     switch (param) {
-      case 'palletLength':
+      case "palletLength":
         this.setState({ palletLength: input });
         break;
 
-      case 'palletWidth':
+      case "palletWidth":
         this.setState({ palletWidth: input });
         break;
 
-      case 'palletHeight':
+      case "palletHeight":
         this.setState({ palletHeight: input });
         break;
 
-      case 'cartonLength':
+      case "cartonLength":
         this.setState({ cartonLength: input });
         break;
 
-      case 'cartonWidth':
+      case "cartonWidth":
         this.setState({ cartonWidth: input });
         break;
 
-      case 'cartonHeight':
+      case "cartonHeight":
         this.setState({ cartonHeight: input });
         break;
 
-      case 'measurementUnit':
+      case "measurementUnit":
         this.setState({ measurementUnit: input });
         this.convertMeasurements(input, prevUnit);
         break;
 
-      case 'maxShippingHeight':
+      case "maxShippingHeight":
         this.setState({ maxShippingHeight: input });
         break;
 
-      case 'cartonWeight':
+      case "cartonWeight":
         this.setState({ cartonWeight: input });
         break;
 
-      case 'palletWeight':
+      case "palletWeight":
         this.setState({ palletWeight: input });
         break;
 
-      case 'weightUnit':
+      case "weightUnit":
         this.convertWeights(input, prevUnit);
         break;
 
-      case 'sideLay':
+      case "sideLay":
         this.setState({ sideLay: input });
         break;
 
@@ -499,7 +435,7 @@ class PalletProvider extends Component {
 
   // Helper function to calculate the total height of the pallet.
   calcTotalHeight = layers => {
-    console.log('1. Calculating total height');
+    // console.log("1. Calculating total height");
     return (
       layers * parseInt(this.state.cartonHeight) +
       parseInt(this.state.palletHeight)
@@ -511,23 +447,15 @@ class PalletProvider extends Component {
     If it is above then will decrease the layers until it is below the maximum.
   */
   verifyHeight = layers => {
-    console.log('2. Verifying height');
+    // console.log("2. Verifying height");
     let totalHeight = this.calcTotalHeight(layers);
     let layersChanged = false;
-    const maxHeight = parseInt(
-      this.state.maxShippingHeight
-    );
+    const maxHeight = parseInt(this.state.maxShippingHeight);
 
-    console.log(
-      '3. ',
-      layers,
-      totalHeight,
-      layersChanged,
-      maxHeight
-    );
+    // console.log("3. ", layers, totalHeight, layersChanged, maxHeight);
 
     if (totalHeight > maxHeight) {
-      console.log('4. Adjusting Height');
+      // console.log("4. Adjusting Height");
       layersChanged = true;
       while (totalHeight > maxHeight) {
         layers--;
@@ -547,16 +475,10 @@ class PalletProvider extends Component {
 
   // Verify total boxes is below weight limit for shipping and adjust accordingly.
   verifyWeight = (boxes, perLayer, layers) => {
-    console.log('5. Verifying weight');
-    const maxShippingWeight = parseFloat(
-      this.state.maxShippingWeight
-    );
-    const cartonWeight = parseFloat(
-      this.state.cartonWeight
-    );
-    const palletWeight = parseFloat(
-      this.state.palletWeight
-    );
+    // console.log("5. Verifying weight");
+    const maxShippingWeight = parseFloat(this.state.maxShippingWeight);
+    const cartonWeight = parseFloat(this.state.cartonWeight);
+    const palletWeight = parseFloat(this.state.palletWeight);
     let totalBoxes = boxes;
     let newLayers = layers;
 
@@ -565,7 +487,7 @@ class PalletProvider extends Component {
 
     // If current weight is above the maximum then calculate a new box total based on the maximum weight divided by the carton weight.
     if (weight > maxShippingWeight) {
-      console.log('6. Adjusting weight');
+      // console.log("6. Adjusting weight");
       totalBoxes = Math.floor(
         (maxShippingWeight - palletWeight) / cartonWeight
       );
@@ -593,7 +515,7 @@ class PalletProvider extends Component {
 
   // Sets the results from the calcPallet function to state.
   setResult = match => {
-    console.log('7. ', match, match[0]);
+    // console.log("7. ", match, match[0]);
     this.setState({
       boxesPerLayer: match[1].toString(),
       layoutType: match[3],
@@ -604,7 +526,7 @@ class PalletProvider extends Component {
 
   // Calculates pallet layout and numbers.
   calcPallet = () => {
-    console.log('8. Calculating....');
+    // console.log("8. Calculating....");
 
     // Reset result values in state. Probably not necessary. CHECK LATER!
     this.setState({
@@ -625,16 +547,10 @@ class PalletProvider extends Component {
     )
       return;
 
-    let cartonLength = parseFloat(
-      measurements.cartonLength
-    );
+    let cartonLength = parseFloat(measurements.cartonLength);
     let cartonWidth = parseFloat(measurements.cartonWidth);
-    let cartonHeight = parseFloat(
-      measurements.cartonHeight
-    );
-    let palletLength = parseFloat(
-      measurements.palletLength
-    );
+    let cartonHeight = parseFloat(measurements.cartonHeight);
+    let palletLength = parseFloat(measurements.palletLength);
     let palletWidth = parseFloat(measurements.palletWidth);
     let boxesPerLayer, totalBoxes;
 
@@ -642,80 +558,60 @@ class PalletProvider extends Component {
       parseFloat(measurements.maxShippingHeight) -
       parseFloat(measurements.palletHeight);
 
-    let longestSide =
-      cartonLength > cartonWidth
-        ? cartonLength
-        : cartonWidth;
-    let shortestSide =
-      cartonLength < cartonWidth
-        ? cartonLength
-        : cartonWidth;
+    let longestSide = cartonLength > cartonWidth ? cartonLength : cartonWidth;
+    let shortestSide = cartonLength < cartonWidth ? cartonLength : cartonWidth;
 
     if (this.state.sideLay && cartonHeight > longestSide) {
-      console.log('9. Side lay confirmed...');
+      // console.log("9. Side lay confirmed...");
       shortestSide = longestSide;
       longestSide = cartonHeight;
       cartonHeight = shortestSide;
     }
 
-    let totalLayers = Math.floor(
-      maxLayersHeight / cartonHeight
-    );
+    let totalLayers = Math.floor(maxLayersHeight / cartonHeight);
 
     let stackTypes = 0;
     let types = [];
     let temp = [];
 
     let layer1 = Math.floor(palletWidth / shortestSide);
-    let layer2 = Math.floor(
-      (palletWidth - shortestSide) / longestSide
-    );
+    let layer2 = Math.floor((palletWidth - shortestSide) / longestSide);
     let layer3 = Math.floor(palletLength / longestSide);
-    let layer4 = Math.floor(
-      (palletLength - longestSide) / shortestSide
-    );
+    let layer4 = Math.floor((palletLength - longestSide) / shortestSide);
     let layer5 = Math.floor(palletWidth / longestSide);
-    let layer6 = Math.floor(
-      (palletWidth - longestSide) / shortestSide
-    );
+    let layer6 = Math.floor((palletWidth - longestSide) / shortestSide);
     let layer7 = Math.floor(palletLength / shortestSide);
-    let layer8 = Math.floor(
-      (palletLength - shortestSide) / longestSide
-    );
-    let layer9 = Math.floor(
-      (palletWidth % longestSide) / cartonHeight
-    );
+    let layer8 = Math.floor((palletLength - shortestSide) / longestSide);
+    let layer9 = Math.floor((palletWidth % longestSide) / cartonHeight);
     let layer10 = Math.floor(
       (palletLength % (shortestSide * 2)) / cartonHeight
     );
 
-    console.log(
-      '10. ',
-      layer1,
-      layer2,
-      layer3,
-      layer4,
-      layer5,
-      layer6,
-      layer7,
-      layer8,
-      layer9,
-      layer10,
-      shortestSide,
-      longestSide,
-      cartonHeight,
-      totalLayers
-    );
+    // console.log(
+    //   "10. ",
+    //   layer1,
+    //   layer2,
+    //   layer3,
+    //   layer4,
+    //   layer5,
+    //   layer6,
+    //   layer7,
+    //   layer8,
+    //   layer9,
+    //   layer10,
+    //   shortestSide,
+    //   longestSide,
+    //   cartonHeight,
+    //   totalLayers
+    // );
 
     const checkLayer = () => {
-      if ((layer1 && layer3 && layer5 && layer7) > 1)
-        return true;
+      if ((layer1 && layer3 && layer5 && layer7) > 1) return true;
       else return false;
     };
 
     const checkLayerRemainder = () => {
-      if ((layer2 && layer4 && layer6 && layer8) > 1)
-        return true;
+      if ((layer2 && layer4 && layer6 && layer8) > 1) return true;
       else return false;
     };
 
@@ -725,40 +621,25 @@ class PalletProvider extends Component {
       (layer3 || layer7) == 1 &&
       checkLayerRemainder() === false
     ) {
-      console.log('Single Stack');
+      // console.log("Single Stack");
       boxesPerLayer = 1;
       totalBoxes = boxesPerLayer * totalLayers;
 
-      temp = [
-        totalLayers,
-        boxesPerLayer,
-        totalBoxes,
-        'single'
-      ];
+      temp = [totalLayers, boxesPerLayer, totalBoxes, "single"];
       types.push(temp);
       stackTypes++;
     }
 
     // Square Stack
-    if (
-      checkLayerRemainder() === false &&
-      checkLayer() === true
-    ) {
+    if (checkLayerRemainder() === false && checkLayer() === true) {
       let bestFit = Math.max(layer3, layer7);
-      console.log('11. bestfit = ', bestFit);
-      if (bestFit == layer3)
-        boxesPerLayer = bestFit * layer1;
-      else if (bestFit == layer7)
-        boxesPerLayer = bestFit * layer5;
+      // console.log("11. bestfit = ", bestFit);
+      if (bestFit == layer3) boxesPerLayer = bestFit * layer1;
+      else if (bestFit == layer7) boxesPerLayer = bestFit * layer5;
 
       totalBoxes = boxesPerLayer * totalLayers;
 
-      temp = [
-        totalLayers,
-        boxesPerLayer,
-        totalBoxes,
-        'square'
-      ];
+      temp = [totalLayers, boxesPerLayer, totalBoxes, "square"];
       types.push(temp);
       stackTypes++;
     }
@@ -767,69 +648,43 @@ class PalletProvider extends Component {
     if (layer9 >= 1 && layer7 > 1 && layer5 == 2) {
       let outerLayersBoxes = layer7 * layer5;
       let innerLayers = layer9 * layer7;
-      let totalInnerLayers = Math.floor(
-        maxLayersHeight / longestSide
-      );
+      let totalInnerLayers = Math.floor(maxLayersHeight / longestSide);
       totalBoxes =
-        outerLayersBoxes * totalLayers +
-        innerLayers * totalInnerLayers;
+        outerLayersBoxes * totalLayers + innerLayers * totalInnerLayers;
 
       boxesPerLayer = outerLayersBoxes + innerLayers;
 
-      temp = [
-        totalLayers,
-        boxesPerLayer,
-        totalBoxes,
-        'triple'
-      ];
+      temp = [totalLayers, boxesPerLayer, totalBoxes, "triple"];
       types.push(temp);
       stackTypes++;
     }
 
     // Castle Stack
     if (layer7 >= 2 && (layer9 && layer10) == 1) {
-      let totalMiddleLayers = Math.floor(
-        maxLayersHeight / shortestSide
-      );
+      let totalMiddleLayers = Math.floor(maxLayersHeight / shortestSide);
 
       totalBoxes = totalLayers * 4 + totalMiddleLayers * 4;
       boxesPerLayer = 8;
 
-      temp = [
-        totalLayers,
-        boxesPerLayer,
-        totalBoxes,
-        'castle'
-      ];
+      temp = [totalLayers, boxesPerLayer, totalBoxes, "castle"];
       types.push(temp);
       stackTypes++;
     }
 
     // Brick Stack
-    if (
-      (layer8 && layer2) == 1 &&
-      (layer7 && layer1) >= 1
-    ) {
-      boxesPerLayer = layer7 * 4;
+    if ((layer8 && layer2) == 1 && (layer7 && layer1) >= 1) {
+      boxesPerLayer = layer3 * 4;
       totalBoxes = boxesPerLayer * totalLayers;
 
-      temp = [
-        totalLayers,
-        boxesPerLayer,
-        totalBoxes,
-        'brick'
-      ];
+      temp = [totalLayers, boxesPerLayer, totalBoxes, "brick"];
       types.push(temp);
       stackTypes++;
     }
-    console.log('12. stackTypes = ' + stackTypes);
-    console.log('13. types = ' + types);
+    // console.log("12. stackTypes = " + stackTypes);
+    // console.log("13. types = " + types);
     if (stackTypes > 1) {
       // Find largest match
       let bestMatch = null;
-      if (types.includes('brick')) {
-        console.log('includes brick');
-      }
       for (let index = 0; index < types.length; index++) {
         const element = types[index];
         if (bestMatch === null) {
@@ -845,10 +700,10 @@ class PalletProvider extends Component {
       this.setResult(temp);
     } else if (stackTypes == 0) {
       // No match
-      console.log('No match!');
+      // console.log("No match!");
       this.setState({
         error: true,
-        errorType: 'No Match!'
+        errorType: "No Match!"
       });
     }
   };
