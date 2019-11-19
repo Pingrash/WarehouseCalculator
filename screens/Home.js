@@ -1,6 +1,11 @@
-import React, { Component } from "react";
-import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
-import MenuButton from "../components/MenuButton";
+import React, { Component } from 'react';
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Text
+} from 'react-native';
+import MenuButton from '../components/MenuButton';
 
 export default class Home extends Component {
   _isMounted = false;
@@ -8,8 +13,8 @@ export default class Home extends Component {
   constructor() {
     super();
     this.state = {
-      resultText: "",
-      calculationText: "",
+      resultText: '',
+      calculationText: '',
       leftBracket: false,
       bracketGroups: 0,
       equalsPressed: false
@@ -30,7 +35,7 @@ export default class Home extends Component {
     This is used multiple times throughout the app for logic checks.
   */
   updateLastChar() {
-    char = this.state.resultText.split("").pop();
+    char = this.state.resultText.split('').pop();
     if (isNaN(char)) {
       this.lastChar = char;
     } else {
@@ -43,10 +48,10 @@ export default class Home extends Component {
   validate() {
     const text = this.state.resultText;
     switch (text.slice(-1)) {
-      case "+":
-      case "-":
-      case "*":
-      case "/":
+      case '+':
+      case '-':
+      case '*':
+      case '/':
         return false;
     }
     return true;
@@ -63,7 +68,7 @@ export default class Home extends Component {
       if (equal) {
         this.setState({
           resultText: eval(text).toString(),
-          calculationText: "",
+          calculationText: '',
           equalsPressed: true
         });
       } else if (!equal) {
@@ -97,8 +102,8 @@ export default class Home extends Component {
 
   clearAll = () => {
     this.setState({
-      resultText: "",
-      calculationText: "",
+      resultText: '',
+      calculationText: '',
       leftBracket: false,
       bracketGroups: 0,
       equalsPressed: false
@@ -119,12 +124,13 @@ export default class Home extends Component {
         this.numberPress(text);
         break;
 
-      case "del":
+      case 'del':
+        this.setState({ equalsPressed: false });
         /*
         Check if last character in the result string is a right bracket.
         If true then set leftBracket back to true so correct bracket is inputed on next bracket button press.
         */
-        if (this.state.resultText.split("").pop() === ")")
+        if (this.state.resultText.split('').pop() === ')')
           this.setState({ leftBracket: true });
 
         // Create a new substring leaving out the last character from the current result string.
@@ -134,20 +140,23 @@ export default class Home extends Component {
         );
         // Set the new result string.
         this.setState({ resultText: newText });
-        (await this._isMounted) ? this.updateLastChar() : null;
-        return this.validate() && this.calculateResult(false);
+        this._isMounted ? this.updateLastChar() : null;
+        return (
+          this.validate() && this.calculateResult(false)
+        );
 
-      case "C":
+      case 'C':
         // Clear text and counter state fields and reset leftBracket to false
         this.clearAll();
         break;
 
-      case "+":
-      case "-":
-      case "*":
-      case "/":
+      case '+':
+      case '-':
+      case '*':
+      case '/':
+        this.setState({ equalsPressed: false });
         // Break if at the start of a new bracket group.
-        if (this.lastChar == "(") break;
+        if (this.lastChar == '(') break;
 
         // Try to evaluate the current resultText.
         // If an error occurs then nothing is returned to avoid a crash.
@@ -162,7 +171,8 @@ export default class Home extends Component {
           Sometimes when brackets are used they may appear in the evaluation result. 
           This if statement will remove them using a regular expression to check for it.
         */
-        if (evaluation) evaluation = evaluation.replace(/[\(\)]+/g, "");
+        if (evaluation)
+          evaluation = evaluation.replace(/[\(\)]+/g, '');
 
         /*
           Set a regular expression variable for validation testing.
@@ -178,8 +188,10 @@ export default class Home extends Component {
             - not in the middle of an open set of brackets
           Second stage checks for operator characters in the evaluation result. This prevents a bug where eval sometimes just returns the equation.
         */
-        (await this._isMounted)
-          ? this.state.resultText && text !== this.lastChar && text !== "("
+        this._isMounted
+          ? this.state.resultText &&
+            text !== this.lastChar &&
+            text !== '('
             ? !regExp.test(evaluation)
               ? this.setState({
                   calculationText: evaluation,
@@ -190,10 +202,10 @@ export default class Home extends Component {
                 })
             : null
           : null;
-        (await this._isMounted) ? this.updateLastChar() : null;
+        this._isMounted ? this.updateLastChar() : null;
         break;
 
-      case "()":
+      case '()':
         /* 
           Contains multiple validation checks to determine what action is required.
 
@@ -203,31 +215,37 @@ export default class Home extends Component {
             THEN a left bracket is set.
         */
         if (
-          (this.state.leftBracket || this.state.bracketGroups > 0) &&
-          (!isNaN(this.lastChar) || this.lastChar == ")")
+          (this.state.leftBracket ||
+            this.state.bracketGroups > 0) &&
+          (!isNaN(this.lastChar) || this.lastChar == ')')
         ) {
-          (await this._isMounted)
+          this._isMounted
             ? this.setState({
-                resultText: this.state.resultText + ")",
+                resultText: this.state.resultText + ')',
                 leftBracket: false,
                 bracketGroups: this.state.bracketGroups - 1
               })
             : null;
-        } else if (!this.state.leftBracket || isNaN(this.lastChar)) {
-          (await this._isMounted)
+        } else if (
+          !this.state.leftBracket ||
+          isNaN(this.lastChar)
+        ) {
+          this._isMounted
             ? this.setState({
-                resultText: this.state.resultText + "(",
+                resultText: this.state.resultText + '(',
                 leftBracket: true,
                 bracketGroups: this.state.bracketGroups + 1
               })
             : null;
         }
-        (await this._isMounted) ? this.updateLastChar() : null;
+        this._isMounted ? this.updateLastChar() : null;
         break;
 
-      case "%":
+      case '%':
+        this.setState({ equalsPressed: false });
         // Return if no reultText or if % was pressed immediatly after an operator.
-        if (!this.state.resultText || isNaN(this.lastChar)) return;
+        if (!this.state.resultText || isNaN(this.lastChar))
+          return;
 
         /*
           Check for a single number by testing for an operator.
@@ -235,19 +253,24 @@ export default class Home extends Component {
         */
         let operatorCheck = /[\+\-\/\*]/g;
         if (!operatorCheck.test(this.state.resultText)) {
-          let percent = parseInt(this.state.resultText) / 100;
+          let percent =
+            parseInt(this.state.resultText) / 100;
           this.setState({
             resultText: percent
           });
           break;
         }
         // Create an array of all number sets in resultText.
-        let numbers = this.state.resultText.match(/[^\d()]+|[\d.]+/g);
+        let numbers = this.state.resultText.match(
+          /[^\d()]+|[\d.]+/g
+        );
         let number = parseInt(numbers[numbers.length - 3]);
-        let multiplier = parseInt(numbers[numbers.length - 1]);
+        let multiplier = parseInt(
+          numbers[numbers.length - 1]
+        );
         let percentageNumber = number * (multiplier / 100);
         (async () => {
-          (await this._isMounted)
+          this._isMounted
             ? this.setState({
                 resultText: this.state.resultText.replace(
                   multiplier,
@@ -259,11 +282,16 @@ export default class Home extends Component {
         })();
         break;
 
-      case "+/-":
+      case '+/-':
+        this.setState({ equalsPressed: false });
         // Set all number sets in resultText to an array.
-        let numberSets = this.state.resultText.match(/(\(-\d+\))|\d+/g);
+        let numberSets = this.state.resultText.match(
+          /(\(-\d+\))|\d+/g
+        );
         // Set the last result of the numberSets array and parse to string.
-        let num = numberSets[numberSets.length - 1].toString();
+        let num = numberSets[
+          numberSets.length - 1
+        ].toString();
         // Set num to a new variable for use later in the replace function.
         let originalNum = num;
         // Simple regEx pattern to look for '-'.
@@ -276,26 +304,29 @@ export default class Home extends Component {
         */
         patt.test(num)
           ? (num = num.substring(2, num.length - 1))
-          : (num = "(-" + num + ")");
+          : (num = '(-' + num + ')');
         /*
           Set the new num to resultText.
           New resultString is set be creating a substring of resultText minus the length of the originalNum, then adding the new num to the end.
           Doing it this way instead of using a function like replace avoids issues that arise due to multiple occurances of the same number.
         */
-        (await this._isMounted)
+        this._isMounted
           ? this.setState({
               resultText:
                 this.state.resultText.substring(
                   0,
-                  this.state.resultText.length - originalNum.length
+                  this.state.resultText.length -
+                    originalNum.length
                 ) + num
             })
           : null;
         this.calculateResult(false);
         break;
 
-      case "=":
-        return this.validate() && this.calculateResult(true);
+      case '=':
+        return (
+          this.validate() && this.calculateResult(true)
+        );
     }
   }
 
@@ -307,13 +338,27 @@ export default class Home extends Component {
     */
     let rows = [];
     let nums = [
-      ["C", "()", "%", "/"],
-      [7, 8, 9, "*"],
-      [4, 5, 6, "-"],
-      [1, 2, 3, "+"],
-      ["+/-", 0, ".", "="]
+      ['C', '()', '%', '/'],
+      [7, 8, 9, '*'],
+      [4, 5, 6, '-'],
+      [1, 2, 3, '+'],
+      ['+/-', 0, '.', '=']
     ];
-    let numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "0", ".", "+/-"];
+    let numbers = [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      '0',
+      '.',
+      '+/-'
+    ];
     for (let i = 0; i < 5; i++) {
       let row = [];
       for (let j = 0; j < 4; j++) {
@@ -321,7 +366,8 @@ export default class Home extends Component {
           <TouchableOpacity
             key={nums[i][j]}
             style={
-              numbers.find(num => num === nums[i][j]) || nums[i][j] === 0
+              numbers.find(num => num === nums[i][j]) ||
+              nums[i][j] === 0
                 ? [styles.button, styles.number]
                 : [styles.button, styles.operations]
             }
@@ -329,11 +375,14 @@ export default class Home extends Component {
           >
             <Text
               style={
-                nums[i][j] === "C"
-                  ? [styles.buttonText, styles.clearButtonText]
+                nums[i][j] === 'C'
+                  ? [
+                      styles.buttonText,
+                      styles.clearButtonText
+                    ]
                   : isNaN(nums[i][j]) &&
-                    nums[i][j] !== "." &&
-                    nums[i][j] !== "+/-"
+                    nums[i][j] !== '.' &&
+                    nums[i][j] !== '+/-'
                   ? [styles.buttonText, styles.operatorText]
                   : styles.buttonText
               }
@@ -353,19 +402,25 @@ export default class Home extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.result}>
-          <Text style={styles.resultText}>{this.state.resultText}</Text>
+          <Text style={styles.resultText}>
+            {this.state.resultText}
+          </Text>
         </View>
         <View style={styles.calculation}>
           <View style={styles.menu}>
-            <MenuButton navigation={this.props.navigation} />
+            <MenuButton
+              navigation={this.props.navigation}
+            />
           </View>
           {this.state.resultText ? (
             <View style={styles.delButton}>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => this.buttonPressed("del")}
+                onPress={() => this.buttonPressed('del')}
               >
-                <Text style={styles.delButtonText}>DEL</Text>
+                <Text style={styles.delButtonText}>
+                  DEL
+                </Text>
               </TouchableOpacity>
             </View>
           ) : null}
@@ -388,79 +443,79 @@ const styles = StyleSheet.create({
   },
   row: {
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center"
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center'
   },
   result: {
     flex: 3,
-    backgroundColor: "#081B33",
-    justifyContent: "space-around",
-    alignItems: "flex-end",
+    backgroundColor: '#081B33',
+    justifyContent: 'space-around',
+    alignItems: 'flex-end',
     paddingRight: 20
   },
   calculation: {
     flex: 1,
-    flexDirection: "row",
-    backgroundColor: "#081B33",
-    justifyContent: "space-around",
-    alignSelf: "stretch"
+    flexDirection: 'row',
+    backgroundColor: '#081B33',
+    justifyContent: 'space-around',
+    alignSelf: 'stretch'
   },
   calculationTextContainer: {
     flex: 3,
-    alignItems: "flex-end",
-    justifyContent: "center",
+    alignItems: 'flex-end',
+    justifyContent: 'center',
     paddingRight: 20,
     paddingLeft: 20
   },
   menu: {
     flex: 0.3,
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   delButton: {
     flex: 1
   },
   buttons: {
     flex: 5.5,
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   button: {
     flex: 1,
-    alignItems: "center",
-    alignSelf: "stretch",
-    justifyContent: "center",
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    justifyContent: 'center',
     borderRadius: 80,
     margin: 3
   },
   number: {
-    backgroundColor: "#767D92"
+    backgroundColor: '#767D92'
   },
   operations: {
-    backgroundColor: "#506680" // #545454
+    backgroundColor: '#506680' // #545454
   },
   calculationText: {
     fontSize: 34,
-    color: "white"
+    color: 'white'
   },
   resultText: {
     fontSize: 40,
-    color: "white"
+    color: 'white'
   },
   buttonText: {
     fontSize: 34,
-    color: "white"
+    color: 'white'
   },
   clearButtonText: {
-    color: "#ff4621"
+    color: '#ff4621'
   },
   operatorText: {
-    color: "#34d126",
+    color: '#34d126',
     letterSpacing: 5
   },
   delButtonText: {
     fontSize: 28,
-    color: "white"
+    color: 'white'
   }
 });
